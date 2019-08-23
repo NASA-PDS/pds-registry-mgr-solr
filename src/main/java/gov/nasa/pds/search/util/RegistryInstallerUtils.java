@@ -30,6 +30,7 @@
 
 package gov.nasa.pds.search.util;
 
+import java.io.Closeable;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
@@ -322,4 +323,28 @@ public class RegistryInstallerUtils {
 	public static InstallerPresets getInstallerPresets() {
 		return presets;
 	}
+
+	public static void safeClose(Process proc) 
+	{
+		if(proc == null) return;
+		
+        safeClose(proc.getErrorStream());
+        safeClose(proc.getInputStream());
+        safeClose(proc.getOutputStream());
+	}
+		
+	public static void safeClose(Closeable obj) 
+	{
+		if(obj == null) return;
+		
+        try 
+        {
+            obj.close();
+        } 
+        catch (Exception ex) 
+        {
+        	// Ignore
+        }
+	}
+
 }

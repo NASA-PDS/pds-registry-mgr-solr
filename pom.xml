@@ -328,18 +328,6 @@ POSSIBILITY OF SUCH DAMAGE.
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon-dom</artifactId>
-      <version>8.7</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon</artifactId>
-      <version>8.7</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
       <version>1.18</version>
