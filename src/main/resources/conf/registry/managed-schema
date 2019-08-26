@@ -7,8 +7,11 @@
     <field name="vid" type="pfloat" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="lidvid" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <uniqueKey>lidvid</uniqueKey>
-    <field name="md5" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
+    <field name="name" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="content" type="binary" indexed="false" stored="true" required="true" multiValued="false" />
+    <field name="md5" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
     <field name="timestamp" type="pdate" indexed="true" stored="true" default="NOW" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
 
