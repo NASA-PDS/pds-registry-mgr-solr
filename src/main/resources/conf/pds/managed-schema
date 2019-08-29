@@ -298,33 +298,11 @@
   <copyField source="lid" dest="identifier" />
   <copyField source="lidvid" dest="identifier" />
   
-  <!-- Instrument -->
-  <copyField source="instrument_name" dest="instrument" />
-  <copyField source="instrument_id" dest="instrument" />
-  
-  <!-- Instrument Type -->
-  <copyField source="instrument_type" dest="instrument-type" />
-  
-  <!-- Instrument Host -->
-  <copyField source="instrument_host_name" dest="instrument-host" />
-  
-  <!-- Instrument Host Type -->
-  <copyField source="instrument_host_type" dest="instrument-host-type" />
-  
-  <!-- Investigation -->
-  <copyField source="investigation_name" dest="investigation" />
-  
-  <!-- Observing System -->  
-  <copyField source="observing_system_name" dest="observing-system" />
-  
   <!-- Person -->
   <copyField source="citation_author_list" dest="person" />
   <copyField source="citation_editor_list" dest="person" />
   <copyField source="full_name" dest="person" />
   <copyField source="person_name" dest="person" />
-  
-  <!-- Product Class -->
-  <copyField source="product_class" dest="product-class" />
   
   <!-- Start Time -->
   <copyField source="investigation_start_date" dest="start-time" />
@@ -333,13 +311,6 @@
   <!-- Stop Time -->
   <copyField source="investigation_stop_date" dest="stop-time" />
   <copyField source="stop_time" dest="stop-time" />
-  
-  <!-- Target -->
-  <copyField source="target_name" dest="target" />
-  
-  <!-- Target Type -->
-  <copyField source="target_ref_target_type" dest="target-type" />
-  <copyField source="target_type" dest="target-type" />
   
   <!-- Term -->
   <copyField source="citation_keyword" dest="term" />
