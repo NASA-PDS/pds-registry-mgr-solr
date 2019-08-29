@@ -213,8 +213,19 @@
        <str name="wt">json</str>
        <str name="start">0</str>
        <str name="rows">50</str>
+       <!-- Facets -->
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
+       <!-- Aliases -->
+       <str name="f.product-class.qf">product_class</str>
+       <str name="f.instrument.qf">instrument_name</str>
+       <str name="f.instrument-type.qf">instrument_type</str>
+       <str name="f.instrument-host.qf">instrument_host_name</str>
+       <str name="f.instrument-host-type.qf">instrument_host_type</str>
+       <str name="f.investigation.qf">investigation_name</str>
+       <str name="f.target.qf">target_name</str>
+       <str name="f.target-type.qf">target_type</str>
+       <str name="f.observing-system.qf">observing_system_name</str>
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>
@@ -247,8 +258,19 @@
        <str name="wt">json</str>
        <str name="start">0</str>
        <str name="rows">50</str>
+       <!-- Facets -->
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
+       <!-- Aliases -->
+       <str name="f.product-class.qf">product_class</str>
+       <str name="f.instrument.qf">instrument_name</str>
+       <str name="f.instrument-type.qf">instrument_type</str>
+       <str name="f.instrument-host.qf">instrument_host_name</str>
+       <str name="f.instrument-host-type.qf">instrument_host_type</str>
+       <str name="f.investigation.qf">investigation_name</str>
+       <str name="f.target.qf">target_name</str>
+       <str name="f.target-type.qf">target_type</str>
+       <str name="f.observing-system.qf">observing_system_name</str>
        <!-- Latest product versions -->
        <str name="fq">{!collapse field=lid max=version_id}</str>
     </lst>
@@ -293,8 +315,19 @@
        <str name="wt">json</str>
        <str name="start">0</str>
        <str name="rows">50</str>
+       <!-- Facets -->
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
+       <!-- Aliases -->
+       <str name="f.product-class.qf">product_class</str>
+       <str name="f.instrument.qf">instrument_name</str>
+       <str name="f.instrument-type.qf">instrument_type</str>
+       <str name="f.instrument-host.qf">instrument_host_name</str>
+       <str name="f.instrument-host-type.qf">instrument_host_type</str>
+       <str name="f.investigation.qf">investigation_name</str>
+       <str name="f.target.qf">target_name</str>
+       <str name="f.target-type.qf">target_type</str>
+       <str name="f.observing-system.qf">observing_system_name</str>
        <!-- Latest product versions -->
        <str name="fq">{!collapse field=lid max=version_id}</str>
     </lst>
