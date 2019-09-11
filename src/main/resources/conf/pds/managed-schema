@@ -112,6 +112,9 @@
 
     <!-- docValues are enabled by default for long type so we don't need to index the version field  -->
     <field name="_version_" type="plong" indexed="false" stored="false"/>
+
+    <field name="transaction_id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
    <field name="identifier" type="string" indexed="true" stored="true" required="true" multiValued="true" />
    <field name="lid" type="string" indexed="true" stored="true" required="true" />
    <field name="version_id" type="pfloat" indexed="true" stored="true" />
