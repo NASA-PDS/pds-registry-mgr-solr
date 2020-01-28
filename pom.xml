@@ -279,7 +279,7 @@ POSSIBILITY OF SUCH DAMAGE.
   </repositories>
   
   <properties>
-    <solr.version>8.2.0</solr.version>
+    <solr.version>8.4.1</solr.version>
   </properties>
 
   <dependencies>
