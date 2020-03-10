@@ -1,6 +1,5 @@
 package gov.nasa.pds.registry.mgr.cmd;
 
-import java.io.Closeable;
 import java.io.File;
 
 import org.apache.commons.cli.CommandLine;
@@ -8,6 +7,8 @@ import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.ZkClientClusterStateProvider;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
+
+import gov.nasa.pds.registry.mgr.util.CloseUtils;
 
 
 public class CreateRegistryCmd implements CliCommand
@@ -55,30 +56,18 @@ public class CreateRegistryCmd implements CliCommand
             client = new CloudSolrClient.Builder(zk).build();
             CollectionAdminRequest.Create req = CollectionAdminRequest.Create
                     .createCollection(COLLECTION_NAME, COLLECTION_NAME, 1, 1);
+
+            @SuppressWarnings("unused")
             CollectionAdminResponse resp = req.process(client);
-            System.out.println("Done: " + resp);
+            System.out.println("Done");
         }
         finally
         {
-            close(client);
-            close(zk);
+            CloseUtils.close(client);
+            CloseUtils.close(zk);
         }
     }
 
-    
-    private void close(Closeable cl)
-    {
-        if(cl == null) return;
-        
-        try
-        {
-            cl.close();
-        }
-        catch(Exception ex)
-        {
-        }
-    }
-    
     
     private int parseShards(String str) throws Exception
     {

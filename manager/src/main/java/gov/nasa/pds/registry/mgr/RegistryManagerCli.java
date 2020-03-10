@@ -16,6 +16,7 @@ import gov.nasa.pds.registry.mgr.cmd.DeleteDataCmd;
 import gov.nasa.pds.registry.mgr.cmd.DeleteRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.ExportFileCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
+import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
 
 
 public class RegistryManagerCli
@@ -85,25 +86,11 @@ public class RegistryManagerCli
         }
         catch(Exception ex)
         {
-            System.out.println("ERROR: " + getMessage(ex));
+            System.out.println("ERROR: " + ExceptionUtils.getMessage(ex));
             return false;
         }
         
         return true;
-    }
-    
-    
-    private String getMessage(Exception ex)
-    {
-        if(ex == null) return "";
-        
-        Throwable tw = ex;
-        while(tw.getCause() != null)
-        {
-            tw = tw.getCause();
-        }
-        
-        return tw.getMessage();
     }
     
     
