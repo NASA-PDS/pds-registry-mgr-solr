@@ -11,6 +11,23 @@ public class DeleteRegistryCmd implements CliCommand
     @Override
     public void run(CommandLine cmdLine)
     {
+        if(cmdLine.hasOption("help"))
+        {
+            printHelp();
+            return;
+        }
+    }
+
+    public void printHelp()
+    {
+        System.out.println("Usage: registry-manager delete-registry <options>");
+
+        System.out.println();
+        System.out.println("Delete registry collection and all its data");
+        System.out.println();
+        System.out.println("Optional parameters:");
+        System.out.println("  -zkHost <host>   One or more ZooKeeper hosts separated by comma. Default value is localhost:9983");
+        System.out.println("  -zkPath <path>   ZooKeeper path. Default value is /");
     }
 
 }

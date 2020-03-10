@@ -85,10 +85,25 @@ public class RegistryManagerCli
         }
         catch(Exception ex)
         {
-            System.out.println(ex.getMessage());
+            System.out.println("ERROR: " + getMessage(ex));
+            return false;
         }
         
         return true;
+    }
+    
+    
+    private String getMessage(Exception ex)
+    {
+        if(ex == null) return "";
+        
+        Throwable tw = ex;
+        while(tw.getCause() != null)
+        {
+            tw = tw.getCause();
+        }
+        
+        return tw.getMessage();
     }
     
     
