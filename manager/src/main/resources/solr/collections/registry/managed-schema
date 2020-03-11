@@ -34,6 +34,10 @@
     <field name="timestamp" type="pdate" indexed="true" stored="true" default="NOW" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
 
+    <!-- Ignore unknown fields -->
+    <dynamicField name="*" type="ignored" />
+    <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
+
     <!-- Types -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
     <fieldType name="pint" class="solr.IntPointField" docValues="true"/>

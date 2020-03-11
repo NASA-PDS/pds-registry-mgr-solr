@@ -8,7 +8,7 @@ public class RegistryManagerMain
     public static void main(String[] args)
     {
         Logger log = Logger.getLogger("");
-        log.setLevel(Level.WARNING);
+        log.setLevel(Level.OFF);
         
         RegistryManagerCli cli = new RegistryManagerCli();
         cli.run(args);

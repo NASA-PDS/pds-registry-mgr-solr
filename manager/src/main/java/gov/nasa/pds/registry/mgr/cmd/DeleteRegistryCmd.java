@@ -8,14 +8,13 @@ import org.apache.solr.client.solrj.request.ConfigSetAdminRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
 import org.apache.solr.client.solrj.response.ConfigSetAdminResponse;
 
+import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
 import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
 
 
 public class DeleteRegistryCmd implements CliCommand
 {
-    private static final String COLLECTION_NAME = "registry";
-    
     public DeleteRegistryCmd()
     {
     }
@@ -57,7 +56,7 @@ public class DeleteRegistryCmd implements CliCommand
     private void deleteCollection(CloudSolrClient client)
     {
         System.out.println("Deleting collection...");
-        CollectionAdminRequest.Delete req = CollectionAdminRequest.Delete.deleteCollection(COLLECTION_NAME);
+        CollectionAdminRequest.Delete req = CollectionAdminRequest.Delete.deleteCollection(Constants.REGISTRY_COLLECTION);
         
         try
         {
@@ -75,7 +74,7 @@ public class DeleteRegistryCmd implements CliCommand
     {
         System.out.println("Deleting configset...");
         ConfigSetAdminRequest.Delete req = new ConfigSetAdminRequest.Delete();
-        req.setConfigSetName(COLLECTION_NAME);
+        req.setConfigSetName(Constants.REGISTRY_COLLECTION);
         
         try
         {

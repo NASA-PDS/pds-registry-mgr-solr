@@ -8,13 +8,12 @@ import org.apache.solr.client.solrj.impl.ZkClientClusterStateProvider;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
 
+import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
 
 
 public class CreateRegistryCmd implements CliCommand
 {
-    private static final String COLLECTION_NAME = "registry";
-    
     public CreateRegistryCmd()
     {
     }
@@ -50,12 +49,12 @@ public class CreateRegistryCmd implements CliCommand
         {
             System.out.println("Uploading configuration...");
             zk = new ZkClientClusterStateProvider(zkHost);
-            zk.uploadConfig(configDir.toPath(), COLLECTION_NAME);
+            zk.uploadConfig(configDir.toPath(), Constants.REGISTRY_COLLECTION);
     
             System.out.println("Creating collection...");
             client = new CloudSolrClient.Builder(zk).build();
             CollectionAdminRequest.Create req = CollectionAdminRequest.Create
-                    .createCollection(COLLECTION_NAME, COLLECTION_NAME, 1, 1);
+                    .createCollection(Constants.REGISTRY_COLLECTION, Constants.REGISTRY_COLLECTION, 1, 1);
 
             @SuppressWarnings("unused")
             CollectionAdminResponse resp = req.process(client);

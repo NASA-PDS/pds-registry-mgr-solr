@@ -154,7 +154,7 @@ public class RegistryManagerCli
         bld = Option.builder("zkHost").hasArg().argName("host");
         options.addOption(bld.build());
 
-        bld = Option.builder("zkPath").hasArg().argName("path");
+        bld = Option.builder("solrUrl").hasArg().argName("url");
         options.addOption(bld.build());
 
         bld = Option.builder("shards").hasArg().argName("#");
@@ -162,9 +162,8 @@ public class RegistryManagerCli
 
         bld = Option.builder("replicas").hasArg().argName("#");
         options.addOption(bld.build());
-
         
-        bld = Option.builder("file").hasArg().argName("file");
+        bld = Option.builder("filePath").hasArg().argName("path");
         options.addOption(bld.build());
 
         bld = Option.builder("configDir").hasArg().argName("dir");
