@@ -9,15 +9,13 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest;
-import org.apache.solr.client.solrj.impl.CloudSolrClient;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.impl.ZkClientClusterStateProvider;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.params.CollectionAdminParams;
 import org.apache.tika.Tika;
 
 import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
+import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
 
 public class LoadDataCmd implements CliCommand
@@ -45,21 +43,7 @@ public class LoadDataCmd implements CliCommand
         List<File> files = getFiles(filePath);
         if(files == null || files.isEmpty()) return;
         
-        // Create Solr connection
-        ZkClientClusterStateProvider zk = null;
-        SolrClient client = null;
-        
-        String zkHost = cmdLine.getOptionValue("zkHost");
-        if(zkHost == null)
-        {
-            String solrUrl = cmdLine.getOptionValue("solrUrl", "http://localhost:8983/solr");
-            client = new HttpSolrClient.Builder(solrUrl).build();
-        }
-        else
-        {
-            zk = new ZkClientClusterStateProvider(zkHost);
-            client = new CloudSolrClient.Builder(zk).build();        
-        }
+        SolrClient client = SolrUtils.createSolrClient(cmdLine);
         
         try
         {
@@ -73,7 +57,6 @@ public class LoadDataCmd implements CliCommand
         finally
         {
             CloseUtils.close(client);
-            CloseUtils.close(zk);
         }
     }
 

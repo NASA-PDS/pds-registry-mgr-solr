@@ -22,7 +22,8 @@
       <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
     </updateLog>
     <autoCommit>
-      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <maxDocs>1000</maxDocs>
+      <maxTime>3000</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
     <autoSoftCommit>

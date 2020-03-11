@@ -41,7 +41,7 @@ public class RegistryManagerCli
         System.out.println();
         System.out.println("Commands:");
         System.out.println("  load-data          Load data into registry collection");
-        System.out.println("  delete-data        Delete a specific Harvest ingestion package or all data from registry collection");
+        System.out.println("  delete-data        Delete data from registry collection");
         System.out.println("  export-file        Export a file from blob storage");
         System.out.println("  create-registry    Create registry collection");
         System.out.println("  delete-registry    Delete registry collection and all its data");
@@ -169,13 +169,17 @@ public class RegistryManagerCli
         bld = Option.builder("configDir").hasArg().argName("dir");
         options.addOption(bld.build());
         
-        bld = Option.builder("pkgId").hasArg().argName("id");
+        // delete-data command
+        bld = Option.builder("lidvid").hasArg().argName("id");
+        options.addOption(bld.build());
+
+        bld = Option.builder("lid").hasArg().argName("id");
+        options.addOption(bld.build());
+
+        bld = Option.builder("packageId").hasArg().argName("id");
         options.addOption(bld.build());
         
         bld = Option.builder("all");
-        options.addOption(bld.build());
-    
-        bld = Option.builder("lidvid").hasArg().argName("id");
         options.addOption(bld.build());
     }
     
