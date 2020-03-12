@@ -61,6 +61,7 @@
       <directory>src/main/resources/solr</directory>
       <outputDirectory>/solr/</outputDirectory>
       <fileMode>664</fileMode>
+      <directoryMode>664</directoryMode>
       <lineEnding>keep</lineEnding>
     </fileSet>
 
