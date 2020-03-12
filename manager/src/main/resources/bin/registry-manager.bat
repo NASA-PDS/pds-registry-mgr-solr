@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableDelayedExpansion enableextensions
+setlocal EnableDelayedExpansion EnableExtensions
 
 REM Check Java
 
@@ -20,7 +20,7 @@ IF NOT DEFINED JAVA_HOME (
 REM JAVA_HOME defined
 IF "%JAVA_HOME:~-1%" == "\" set JAVA_HOME=%JAVA_HOME:~0,-1%
 IF NOT EXIST "%JAVA_HOME%\bin\java.exe" (
-  @echo "java.exe not found in %JAVA_HOME%\bin. Please set JAVA_HOME to a valid directory."
+  @echo java.exe not found in %JAVA_HOME%\bin. Please set JAVA_HOME to a valid directory.
   endlocal
   exit /b 0
 )
@@ -48,3 +48,5 @@ FOR /f %%f IN ('dir /b /s "%REGISTRY_MANAGER_HOME%\dist\registry-manager-*.jar"'
 REM Run Registry Manager
 
 "%JAVA%" -jar "%TOOL_JAR%" %*
+
+endlocal
