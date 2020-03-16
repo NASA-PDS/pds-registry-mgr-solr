@@ -12,6 +12,7 @@
     <field name="_file_name" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="_file_type" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="_file_size" type="plong"  indexed="true" stored="true" required="true" multiValued="false" />
+    <field name="_file_ref"  type="string" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="_file_md5"  type="string" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="_file_blob" type="binary" indexed="false" stored="true" required="false" multiValued="false" />
 
