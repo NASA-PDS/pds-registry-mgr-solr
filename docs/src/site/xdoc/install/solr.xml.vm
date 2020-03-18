@@ -90,6 +90,21 @@ Make sure <i>Cloud</i> menu item is available on the left. Click it. You should 
 <img src="/images/solr-adm2.jpg" width="85%" />
 </p>
 
+<h4>Docker / Podman</h4>
+<p>
+You can run Solr in Docker or Podman. Use the official Solr image from DockerHub (solr:8.4).
+Map both ZooKeeper (9983) and Solr (8983) ports. 
+You would need access to ZooKeeper to upload PDS registry collection configset.
+Do not forget to pass <b>-cloud</b> parameter to start Solr in cloud mode.
+</p>
+<p>
+Below example is for CentOS 8 / RHEL 8 which usually have Podman preinstalled (available in AppStream).
+If your system has Docker, use <i>docker</i> command with the same parameters.
+</p>
+<source>
+podman run -p 8983:8983 -p 9983:9983 -d --name solr -t solr:8.4 -cloud
+</source>
+
 </subsection>
 
 <!-- ======================================================= -->

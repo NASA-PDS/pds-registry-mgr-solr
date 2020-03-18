@@ -40,7 +40,7 @@ but development and testing of PDS Registry and other tools is mostly done with 
 <ul>
 <li>Open JDK (Free). Can be downloaded from different sites, for example, 
 <a href="https://adoptopenjdk.net/" target="_blank">adoptopenjdk.net</a>. 
-Most Linux distributions have it in their standard repositories.</li>
+Most Linux distributions have Open JDK in their standard repositories.</li>
 <li>Oracle JDK (Commercial). Can be downloaded from 
 <a href="http://www.oracle.com/technetwork/java/javase/downloads/" target="_blank">www.oracle.com</a>. 
 You must register and accept a license to download.</li>
