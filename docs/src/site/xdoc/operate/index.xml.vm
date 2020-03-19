@@ -67,7 +67,7 @@ The following table lists common operations and available tools.
 <table>
 <tr><th>Operation</th><th>Tool</th></tr>
 <tr><td>Crawl PDS4 products to extract some metadata</td><td>Harvest</td></tr>
-<tr><td>Create or delete registry collection(s) in Apache Solr</td><td>Registry Manager, Solr and ZooKepper command-line tools, Solr admin UI, Solr API</td></tr>
+<tr><td>Create or delete registry collection(s) in Apache Solr</td><td>Registry Manager, Solr and ZooKeeper command-line tools, Solr admin UI, Solr API</td></tr>
 <tr><td>Load metadata created by Harvest into the Registry (Solr)</td><td>Registry Manager, Solr post tool, Solr API</td></tr>
 <tr><td>Delete some or all metadata from the Registry</td><td>Registry Manager, Solr admin UI, Solr API</td></tr>
 <tr><td>Export a file from Registry BLOB storage</td><td>Registry Manager</td></tr>
@@ -83,6 +83,9 @@ The following table lists common operations and available tools.
 <!-- ======================================================== -->
 
 <section name="Registry Manager">
+<p>
+See <a href="/operate/reg-manager.html">Registry Manager Operation</a> section for more information.
+</p>
 </section>
 
 </body>
