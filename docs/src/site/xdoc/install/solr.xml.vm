@@ -98,7 +98,7 @@ You would need access to ZooKeeper to upload PDS registry collection configset.
 Do not forget to pass <b>-cloud</b> parameter to start Solr in cloud mode.
 </p>
 <p>
-Below example is for CentOS 8 / RHEL 8 which usually have Podman preinstalled (available in AppStream).
+The following example is for CentOS 8 / RHEL 8 which usually have Podman preinstalled (available in AppStream).
 If your system has Docker, use <i>docker</i> command with the same parameters.
 </p>
 <source>
@@ -108,10 +108,6 @@ podman run -p 8983:8983 -p 9983:9983 -d --name solr -t solr:8.4 -cloud
 </subsection>
 
 <!-- ======================================================= -->
-
-
-<p>
-</p>
 
 
 </section>

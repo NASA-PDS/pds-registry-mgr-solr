@@ -63,8 +63,6 @@ You will need Java to run Registry Manager, Harvest and Apache Solr.
 <p>
 Apache Solr running in cloud mode is required to store PDS Registry data. 
 It can be installed as described in <a href="solr.html">Solr Installation</a> section.
-</p>
-<p>
 You can run Solr locally on your laptop or desktop or remotely on a server.
 </p>
 </subsection>
@@ -76,6 +74,9 @@ You can run Solr locally on your laptop or desktop or remotely on a server.
 Download binary package (zip or tar.gz) from <a href="https://github.com/NASA-PDS-Incubator/registry/releases" target="_blank">GitHub</a>.
 Extract to a folder, for example, <i>/home/pds/registry</i>. We will call this direcotry <i>REGISTRY_HOME</i>.
 Optionally add <i>REGISTRY_HOME/bin</i> folder to your PATH environment variable.
+</p>
+<p>
+Create registry collection in Apache Solr as described in <a href="registry.html">this section</a>.
 </p>
 </subsection>
 
