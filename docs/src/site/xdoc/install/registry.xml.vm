@@ -38,8 +38,12 @@ registry-manager create-registry -help
 </source>
 
 <p>
-To check that registry collection was created, either use <i>curl</i>, 
-or open the following URL in a browser: <i>http://localhost:8983/solr/registry/schema</i>.
+To check that registry collection was created open the following URL in 
+a browser: <i>http://localhost:8983/solr/registry/schema</i> or use <i>curl</i>
+if it is available on your system (Linux, Mac)
+<source>
+curl 'http://localhost:8983/solr/registry/schema'
+</source>
 </p>
 
 <p>

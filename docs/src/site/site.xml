@@ -64,6 +64,8 @@
   <item name="Operation" href="operate/index.html">
     <item name="Harvest" href="operate/harvest.html"/>
     <item name="Registry Manager" href="operate/reg-manager.html"/>
+    <item name="Registry Collection" href="operate/reg-collection.html"/>
+    <item name="Solr Tools" href="operate/solr-tools.html"/>
   </item>
 </menu>
 

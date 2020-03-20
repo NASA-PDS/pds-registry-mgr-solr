@@ -58,12 +58,13 @@ at pds_operator@jpl.nasa.gov and we would be happy to help work through any issu
 <section name="PDS Registry and Related Software">
 <p>
 <ul>
-<li><b>Java</b> is required to run the Registry, Solr, Registry Manager and other tools.</li>
-<li><b>Apache Solr</b> is used to store registry data.</li>
-<li><b>Registry Manager</b> tool is designed to load, delete and export registry data. 
-Also, it can be used to install and uninstall PDS registry.</li>
-<li><b>Harvest</b> is a tool to crawl and extract metadata from PDS4 files. Data extracted by Harvest 
-can be loaded into the Registry with Registry Manager or other tools.</li>
+  <li><b>Java</b> is required to run Solr, Harvest, Registry Manager and other tools.</li>
+  <li>Registry data is stored in <b>Apache Solr</b>.</li>
+  <li><b>Registry Manager</b> command-line tool is designed to load, delete and export registry data. 
+It can also create and delete registry collection in Solr.</li>
+  <li><b>Harvest</b> is a tool to crawl and extract metadata from PDS4 files.
+Extracted metadata is stored in an "intermediate" XML file which can be loaded into Solr 
+by Registry Manager or Solr post tool.</li>
 </ul>
 </p>
 

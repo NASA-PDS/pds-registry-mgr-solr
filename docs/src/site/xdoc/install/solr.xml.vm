@@ -76,7 +76,7 @@ solr start -cloud
 </source>
 
 <p>
-To check that Solr server started in cloud mode, open a web browser and go to <i>http://localhost:8983/solr/</i>.
+To check that Solr server started in cloud mode, open Solr Admin UI in a web browser: <i>http://localhost:8983/solr/</i>.
 You should see a page similar to this.
 </p>
 <p>
@@ -84,7 +84,7 @@ You should see a page similar to this.
 </p>
 
 <p>
-Make sure <i>Cloud</i> menu item is available on the left. Click it. You should see a page similar to this.
+Check that <i>Cloud</i> menu item is available on the left. Click it. You should see a page similar to this.
 </p>
 <p>
 <img src="/images/solr-adm2.jpg" width="85%" />
