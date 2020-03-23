@@ -75,7 +75,17 @@ To delete registry collection from Solr run the following command.
 <source>
 registry-manager delete-registry
 </source>
+</subsection>
 
+<!-- ====================================================== -->
+
+<subsection name="Customization">
+<p>
+You may want to add more fields to default schema or change default Solr configuration.
+See <a href="/operate/reg-collection.html">Registry Collection Configuration</a> and
+<a href="https://lucene.apache.org/solr/guide/documents-fields-and-schema-design.html" target="_blank">Solr Documentation</a>
+for more information.
+</p>
 </subsection>
 
 </section>
