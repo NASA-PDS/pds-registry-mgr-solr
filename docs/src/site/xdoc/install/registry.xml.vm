@@ -15,8 +15,11 @@ Registry stores its data in Apache Solr. You must create registry collection in 
 </p>
 
 <p>
-Registry manager comes with default registry "configset" located in <i>REGISTRY_HOME/solr/collections/registry</i> directory. 
-It consists of two files, <i>managed-schema</i> and <i>solrconfig.xml</i>.
+Registry manager comes with default registry "configset" located in <i>REGISTRY_MANAGER_HOME/solr/collections/registry</i> 
+directory, where <i>REGISTRY_MANAGER_HOME</i> is the directory where you installed Registry Manager, for example
+<i>/home/pds/registry</i>.
+The default registry configset consists of two files, <i>managed-schema</i> and <i>solrconfig.xml</i>.
+You may want to add more fields to default schema or change default Solr configuration.
 </p>
 
 <subsection name="Create Collection">
@@ -30,12 +33,13 @@ registry-manager create-registry
 </source>
 
 <p>
-You can customize <i>create-registry</i> command by passing several parameters. 
-To see the list of available parameters, run
-</p>
+You can customize <i>create-registry</i> command by passing several parameters.
+See <a href="/operate/reg-manager.html">Registry Manager Help</a> for more info.
+To see the list of available parameters and basic usage you can also run
 <source>
 registry-manager create-registry -help
 </source>
+</p>
 
 <p>
 To check that registry collection was created open the following URL in 
@@ -69,12 +73,18 @@ and manage registry collection.
 <!-- ====================================================== -->
 
 <subsection name="Delete Collection">
+
 <p>
 To delete registry collection from Solr run the following command.
-</p>
 <source>
 registry-manager delete-registry
 </source>
+</p>
+
+<p>
+See <a href="/operate/reg-manager.html">Registry Manager Help</a> for more info.
+</p>
+
 </subsection>
 
 <!-- ====================================================== -->
