@@ -16,7 +16,7 @@
     <field name="_file_md5"  type="string" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="_file_blob" type="binary" indexed="false" stored="true" required="false" multiValued="false" />
 
-    <field name="xml_root_element" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+    <field name="xml_root_element" type="string" indexed="true" stored="true" required="false" multiValued="false" />
 
     <!-- Package / transaction ID -->
     <field name="_package_id" type="string" indexed="true" stored="true" required="false" multiValued="false" />
