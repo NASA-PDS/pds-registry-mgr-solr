@@ -1,5 +1,22 @@
 # Change Log
 
+## [v3.0.0](https://github.com/NASA-PDS-Incubator/registry/tree/v3.0.0) (2020-03-26)
+[Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v2.2.1...v3.0.0)
+
+**Implemented enhancements:**
+
+- Update Registry documentation per new registry-mgr upgrades [\#38](https://github.com/NASA-PDS-Incubator/registry/issues/38)
+- Expand Registry collection to include additional overall data system metrics on the archive [\#31](https://github.com/NASA-PDS-Incubator/registry/issues/31)
+
+**Merged pull requests:**
+
+- Refactor registry to include enhanced registry manager and standalone registry [\#39](https://github.com/NASA-PDS-Incubator/registry/pull/39) ([jordanpadams](https://github.com/jordanpadams))
+- Rolled back some changes from issue \#i31 [\#35](https://github.com/NASA-PDS-Incubator/registry/pull/35) ([tdddblog](https://github.com/tdddblog))
+- More system metrics \(file info\). See Issue \#31 [\#34](https://github.com/NASA-PDS-Incubator/registry/pull/34) ([tdddblog](https://github.com/tdddblog))
+
+## [v2.2.1](https://github.com/NASA-PDS-Incubator/registry/tree/v2.2.1) (2019-10-27)
+[Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v2.2.0...v2.2.1)
+
 ## [v2.2.0](https://github.com/NASA-PDS-Incubator/registry/tree/v2.2.0) (2019-10-25)
 [Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v2.1.2...v2.2.0)
 
