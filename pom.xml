@@ -13,7 +13,7 @@
     
     <groupId>gov.nasa.pds</groupId>
     <artifactId>registry-manager</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>PDS Registry Manager</name>
