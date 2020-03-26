@@ -56,36 +56,36 @@
       <fileMode>664</fileMode>
       <lineEnding>keep</lineEnding>
     </fileSet>
+
     <fileSet>
-      <directory>src/main/resources/collections</directory>
-      <outputDirectory>/collections/</outputDirectory>
+      <directory>src/main/resources/solr</directory>
+      <outputDirectory>/solr/</outputDirectory>
       <fileMode>664</fileMode>
       <lineEnding>keep</lineEnding>
     </fileSet>
-    <fileSet>
-      <directory>src/main/resources/build</directory>
-      <outputDirectory>/build/</outputDirectory>
-      <includes>
-        <include>**/Dockerfile</include>
-      </includes>
-      <fileMode>775</fileMode>
-      <lineEnding>unix</lineEnding>
-    </fileSet>
+
     <fileSet>
       <directory>src/main/resources/bin</directory>
       <outputDirectory>/bin/</outputDirectory>
       <includes>
-      	<include>**/registry.properties</include>
-        <include>**/registry_installer_standalone.sh</include>
-        <include>**/registry_installer_docker.sh</include>
-        <include>**/registry-mgr</include>
-        <include>**/registry_install.bat</include>
-        <include>**/registry_uninstall.bat</include>
+        <include>**/registry-manager.bat</include>
+      </includes>
+      <fileMode>775</fileMode>
+      <lineEnding>dos</lineEnding>
+      <filtered>true</filtered>
+    </fileSet>
+
+    <fileSet>
+      <directory>src/main/resources/bin</directory>
+      <outputDirectory>/bin/</outputDirectory>
+      <includes>
+        <include>**/registry-manager</include>
       </includes>
       <fileMode>775</fileMode>
       <lineEnding>unix</lineEnding>
       <filtered>true</filtered>
     </fileSet>
+
     <fileSet>
       <directory>target/site</directory>
       <outputDirectory>doc</outputDirectory>
@@ -107,36 +107,6 @@
       <fileMode>664</fileMode>
       <lineEnding>unix</lineEnding>
     </file>
-    <file>
-      <source>README-PACKAGE.txt</source>
-      <outputDirectory>/</outputDirectory>
-      <destName>README.txt</destName>
-      <fileMode>664</fileMode>
-      <lineEnding>unix</lineEnding>
-      <filtered>true</filtered>
-    </file>
-    <file>
-      <source>src/main/resources/build/VERSION.txt</source>
-      <outputDirectory>/</outputDirectory>
-      <fileMode>664</fileMode>
-      <lineEnding>unix</lineEnding>
-      <filtered>true</filtered>
-    </file>
   </files>
-
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>lib</outputDirectory>
-      <includes>
-        <include>org.slf4j:slf4j-api</include>
-        <include>org.slf4j:slf4j-log4j12</include>
-        <include>commons-logging:commons-logging</include>
-        <include>log4j:log4j</include>
-        <include>commons-io:commons-io</include>
-        <include>org.apache.solr:solr-core</include>
-      </includes>
-      <fileMode>664</fileMode>
-    </dependencySet>
-  </dependencySets>
 
 </assembly>
