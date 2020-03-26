@@ -1,5 +1,15 @@
 # Change Log
 
+## [v3.2.0](https://github.com/NASA-PDS-Incubator/registry/tree/v3.2.0) (2020-03-26)
+[Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v3.1.0...v3.2.0)
+
+**Implemented enhancements:**
+
+- Improve Registry Manager to work in Windows and support more commands [\#37](https://github.com/NASA-PDS-Incubator/registry/issues/37)
+
+## [v3.1.0](https://github.com/NASA-PDS-Incubator/registry/tree/v3.1.0) (2020-03-26)
+[Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v3.0.0...v3.1.0)
+
 ## [v3.0.0](https://github.com/NASA-PDS-Incubator/registry/tree/v3.0.0) (2020-03-26)
 [Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v2.2.1...v3.0.0)
 
