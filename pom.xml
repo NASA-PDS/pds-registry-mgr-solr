@@ -4,10 +4,41 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Inherit release profile, reporting, SNAPSHOT repo, etc. from parent repo -->
+    <parent>
+        <groupId>gov.nasa</groupId>
+        <artifactId>pds</artifactId>
+        <version>1.1.0</version>
+    </parent>
+    
     <groupId>gov.nasa.pds</groupId>
-    <artifactId>registry-manager</artifactId>
-    <version>3.0.0</version>
+    <artifactId>registry</artifactId>
+    <version>2.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
+    <name>PDS Registry Manager</name>
+    <description>
+        The Registry Manager software can be used to manage the Solr-based PDS Registry Service instance.
+    </description>
+    
+    <url>https://nasa-pds-incubator.github.io/registry/</url>
+    
+    <organization>
+        <name>Jet Propulsion Laboratory, California Institute of Technology</name>
+    </organization>
+    
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    
+    <scm>
+        <url>https://github.com/NASA-PDS-Incubator/registry/tree/master</url>
+        <connection>scm:git:git://github.com/NASA-PDS-Incubator/registry.git</connection>
+        <developerConnection>scm:git:ssh://github.com:NASA-PDS-Incubator/registry.git</developerConnection>
+    </scm>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
