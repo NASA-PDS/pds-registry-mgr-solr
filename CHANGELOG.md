@@ -1,5 +1,16 @@
 # Change Log
 
+## [v3.2.1](https://github.com/NASA-PDS-Incubator/registry/tree/v3.2.1) (2020-03-27)
+[Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v3.2.0...v3.2.1)
+
+**Fixed bugs:**
+
+- Bash script does not work on macos, likely not on linux either [\#40](https://github.com/NASA-PDS-Incubator/registry/issues/40)
+
+**Merged pull requests:**
+
+- \#40 Bash script doesn't work on Mac. [\#41](https://github.com/NASA-PDS-Incubator/registry/pull/41) ([tdddblog](https://github.com/tdddblog))
+
 ## [v3.2.0](https://github.com/NASA-PDS-Incubator/registry/tree/v3.2.0) (2020-03-26)
 [Full Changelog](https://github.com/NASA-PDS-Incubator/registry/compare/v3.1.0...v3.2.0)
 
