@@ -1,6 +1,8 @@
 # PDS Registry
 The PDS Registry provides functionality for tracking, searching, auditing, locating, and maintaining artifacts within the system. These artifacts can range from data files and label files, schemas, dictionary definitions for objects and elements, services, etc. The core functionality for this component is satisfied by Apache Solr.
 
+A sub-component of the PDS Registry App (https://github.com/NASA-PDS-Incubator/pds-app-registry).
+
 # Documentation
 The documentation for the latest release of the PDS Registry, including release notes, installation and operation of the software are online at https://nasa-pds-incubator.github.io/registry/.
 
