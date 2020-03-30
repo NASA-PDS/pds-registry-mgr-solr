@@ -33,12 +33,6 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
-    
-    <scm>
-        <url>https://github.com/NASA-PDS-Incubator/registry/tree/master</url>
-        <connection>scm:git:git://github.com/NASA-PDS-Incubator/registry.git</connection>
-        <developerConnection>scm:git:ssh://github.com:NASA-PDS-Incubator/registry.git</developerConnection>
-    </scm>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
