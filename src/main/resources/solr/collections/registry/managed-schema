@@ -7,6 +7,7 @@
     <field name="vid" type="pfloat" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="lidvid" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <uniqueKey>lidvid</uniqueKey>
+    <field name="product_class" type="string" indexed="true" stored="true" required="false" multiValued="false" />
 
     <!-- Registry File Info -->
     <field name="_file_name" type="string" indexed="true" stored="true" required="true" multiValued="false" />
@@ -47,6 +48,13 @@
     <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
     <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
     <fieldType name="binary" class="solr.BinaryField"/>
+
+    <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory" />
+      </analyzer>
+    </fieldType>
 
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
       <analyzer type="index">
