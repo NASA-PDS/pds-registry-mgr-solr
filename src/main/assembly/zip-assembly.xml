@@ -52,6 +52,7 @@
       <excludes>
         <exclude>*-sources.jar</exclude>
         <exclude>*-test-sources.jar</exclude>
+        <exclude>*-javadoc.jar</exclude>
       </excludes>
       <fileMode>664</fileMode>
       <lineEnding>keep</lineEnding>
