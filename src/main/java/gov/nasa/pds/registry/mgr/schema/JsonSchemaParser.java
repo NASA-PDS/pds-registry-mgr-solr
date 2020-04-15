@@ -8,11 +8,15 @@ import com.google.gson.stream.JsonToken;
 public class JsonSchemaParser
 {
     private JsonReader rd;
-    private int count;
+    private ClassParser classParser;
+    private AttributeParser attrParser;
+    
     
     public JsonSchemaParser(String fileName) throws Exception
     {
         rd = new JsonReader(new FileReader(fileName));
+        classParser = new ClassParser(rd);
+        attrParser = new AttributeParser(rd);
     }
     
     
@@ -42,7 +46,7 @@ public class JsonSchemaParser
                 String name = rd.nextName();
                 if("dataDictionary".equals(name))
                 {
-                    processDataDic();
+                    parseDataDic();
                 }
                 else
                 {
@@ -57,7 +61,7 @@ public class JsonSchemaParser
     }
     
     
-    private void processDataDic() throws Exception
+    private void parseDataDic() throws Exception
     {
         rd.beginObject();
 
@@ -66,18 +70,14 @@ public class JsonSchemaParser
             String name = rd.nextName();
             if("classDictionary".equals(name))
             {
-                count = 0;
-                System.out.println("Classes:");
-                processClassDic();
-                System.out.println(count);
+                parseClassDic();
             }
+            /*
             else if("attributeDictionary".equals(name))
             {
-                count = 0;
-                System.out.println("\nAttributes:");
-                processAttrDic();
-                System.out.println(count);
+                parseAttrDic();
             }
+            */
             else
             {
                 rd.skipValue();
@@ -88,7 +88,7 @@ public class JsonSchemaParser
     }
 
     
-    private void processClassDic() throws Exception
+    private void parseClassDic() throws Exception
     {
         rd.beginArray();
         
@@ -101,7 +101,7 @@ public class JsonSchemaParser
                 String name = rd.nextName();
                 if("class".equals(name))
                 {
-                    processClass();
+                    classParser.parseClass();
                 }
                 else
                 {
@@ -116,7 +116,7 @@ public class JsonSchemaParser
     }
 
     
-    private void processAttrDic() throws Exception
+    private void parseAttrDic() throws Exception
     {
         rd.beginArray();
         
@@ -129,7 +129,7 @@ public class JsonSchemaParser
                 String name = rd.nextName();
                 if("attribute".equals(name))
                 {
-                    processAttr();
+                    attrParser.parseAttr();
                 }
                 else
                 {
@@ -143,51 +143,4 @@ public class JsonSchemaParser
         rd.endArray();
     }
 
-    
-    private void processClass() throws Exception
-    {
-        count++;
-        
-        rd.beginObject();
-        
-        while(rd.hasNext() && rd.peek() != JsonToken.END_OBJECT)
-        {
-            String name = rd.nextName();
-            if("identifier".equals(name))
-            {
-                String id = rd.nextString();
-                System.out.println(id);
-            }
-            else
-            {
-                rd.skipValue();
-            }
-        }
-        
-        rd.endObject();
-    }
-
-    
-    private void processAttr() throws Exception
-    {
-        count++;
-        
-        rd.beginObject();
-        
-        while(rd.hasNext() && rd.peek() != JsonToken.END_OBJECT)
-        {
-            String name = rd.nextName();
-            if("identifier".equals(name))
-            {
-                String id = rd.nextString();
-                System.out.println(id);
-            }
-            else
-            {
-                rd.skipValue();
-            }
-        }
-        
-        rd.endObject();
-    }
 }
