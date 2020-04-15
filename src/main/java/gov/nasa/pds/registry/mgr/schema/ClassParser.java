@@ -1,15 +1,36 @@
 package gov.nasa.pds.registry.mgr.schema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 public class ClassParser
-{
-    private JsonReader rd;
+{    
+///////////////////////////////////////////////////////////////////////////////
+    
+    public static class Field
+    {
+        public String attrId;
+        public String name;
+        
+        public Field(String attrId)
+        {
+            this.attrId = attrId;
+        }
+    }
+
+///////////////////////////////////////////////////////////////////////////////    
+    
+    private JsonReader rd;    
+    private List<Field> fields;
+    
     
     public ClassParser(JsonReader rd)
     {
         this.rd = rd;
+        fields = new ArrayList<>();
     }
 
     
@@ -40,6 +61,12 @@ public class ClassParser
     }
 
     
+    public List<Field> getFields()
+    {
+        return fields;
+    }
+    
+    
     private void parseAssocList(String classNsName) throws Exception
     {
         rd.beginArray();
@@ -57,7 +84,7 @@ public class ClassParser
                     // ID will be NULL if association type != "attribute_of"
                     if(attrId != null)
                     {
-                        addAttribute(classNsName, attrId);
+                        addField(classNsName, attrId);
                     }
                 }
                 else
@@ -73,11 +100,13 @@ public class ClassParser
     }
 
     
-    private void addAttribute(String classNsName, String attrId) throws Exception
+    private void addField(String classNsName, String attrId) throws Exception
     {
+        Field field = new Field(attrId);
         String attrNsName = extractAttrNsName(attrId);
-        String fieldName = classNsName + "." + attrNsName;
-        System.out.println(fieldName);
+        field.name = classNsName + "." + attrNsName;
+
+        fields.add(field);
     }
     
     

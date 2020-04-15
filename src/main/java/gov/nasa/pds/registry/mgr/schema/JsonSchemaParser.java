@@ -1,6 +1,9 @@
 package gov.nasa.pds.registry.mgr.schema;
 
 import java.io.FileReader;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -61,6 +64,23 @@ public class JsonSchemaParser
     }
     
     
+    public Set<String> getDataTypes()
+    {
+        return attrParser.getDataTypes();
+    }
+    
+    
+    public void genSolrFields()
+    {
+        Map<String, String> id2type = attrParser.getIdToTypeMap();
+        
+        for(ClassParser.Field field: classParser.getFields())
+        {
+            System.out.println(field.name + "  -->  " + id2type.get(field.attrId));
+        }
+    }
+    
+    
     private void parseDataDic() throws Exception
     {
         rd.beginObject();
@@ -72,12 +92,10 @@ public class JsonSchemaParser
             {
                 parseClassDic();
             }
-            /*
             else if("attributeDictionary".equals(name))
             {
                 parseAttrDic();
             }
-            */
             else
             {
                 rd.skipValue();

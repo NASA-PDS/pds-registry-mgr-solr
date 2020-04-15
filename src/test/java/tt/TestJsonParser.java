@@ -10,7 +10,18 @@ public class TestJsonParser
     {
         JsonSchemaParser parser = new JsonSchemaParser("/tmp/schema/PDS4_PDS_JSON_1D00.JSON");
         parser.parse();
+        
+        parser.genSolrFields();
+        
         parser.close();
     }
-        
+
+    
+    private static void printDataTypes(JsonSchemaParser parser)
+    {
+        for(String str: parser.getDataTypes())
+        {
+            System.out.println(str);
+        }
+    }
 }
