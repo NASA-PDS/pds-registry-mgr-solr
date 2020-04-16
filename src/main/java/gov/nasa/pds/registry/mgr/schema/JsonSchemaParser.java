@@ -1,5 +1,6 @@
 package gov.nasa.pds.registry.mgr.schema;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,9 @@ public class JsonSchemaParser
     private AttributeParser attrParser;
     
     
-    public JsonSchemaParser(String fileName) throws Exception
+    public JsonSchemaParser(File file) throws Exception
     {
-        rd = new JsonReader(new FileReader(fileName));
+        rd = new JsonReader(new FileReader(file));
         classParser = new ClassParser(rd);
         attrParser = new AttributeParser(rd);
     }
@@ -70,13 +71,16 @@ public class JsonSchemaParser
     }
     
     
-    public void genSolrFields()
+    public void generateSolrSchema() throws Exception
     {
         Map<String, String> id2type = attrParser.getIdToTypeMap();
         
         for(ClassParser.Field field: classParser.getFields())
         {
-            System.out.println(field.name + "  -->  " + id2type.get(field.attrId));
+            String pdsDataType = id2type.get(field.attrId);
+            if(pdsDataType == null) throw new Exception("No data type mapping for attribute " + field.attrId);
+            
+            System.out.println(field.name + "  -->  " + pdsDataType);
         }
     }
     
