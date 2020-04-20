@@ -2,6 +2,7 @@ package gov.nasa.pds.registry.mgr.cmd;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -121,12 +122,17 @@ public class GenerateSolrSchemaCmd implements CliCommand
     
     private void processJsonFiles(List<File> files, File outDir) throws Exception
     {
+        File outFile = new File(outDir, "solr-fields.xml");
+        FileWriter writer = new FileWriter(outFile);
+        
         for(File file: files)
         {
             JsonSchemaParser parser = new JsonSchemaParser(file);
             parser.parse();
-            parser.generateSolrSchema();
+            parser.generateSolrSchema(writer);
             parser.close();
         }
+        
+        writer.close();
     }
 }

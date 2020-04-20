@@ -2,25 +2,31 @@ package gov.nasa.pds.registry.mgr.schema;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.List;
+import java.io.Writer;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
+import gov.nasa.pds.registry.mgr.util.SolrSchemaUtils;
+
+
 public class JsonSchemaParser
 {
     private JsonReader rd;
     private ClassParser classParser;
     private AttributeParser attrParser;
-    
+    private Pds2SolrDataTypeMap dtMap;
     
     public JsonSchemaParser(File file) throws Exception
     {
         rd = new JsonReader(new FileReader(file));
         classParser = new ClassParser(rd);
         attrParser = new AttributeParser(rd);
+        
+        dtMap = new Pds2SolrDataTypeMap();
     }
     
     
@@ -71,16 +77,48 @@ public class JsonSchemaParser
     }
     
     
-    public void generateSolrSchema() throws Exception
+    public void generateSolrSchema(Writer writer) throws Exception
     {
         Map<String, String> id2type = attrParser.getIdToTypeMap();
         
-        for(ClassParser.Field field: classParser.getFields())
+        for(DDClass ddClass: classParser.getClassMap().values())
         {
-            String pdsDataType = id2type.get(field.attrId);
-            if(pdsDataType == null) throw new Exception("No data type mapping for attribute " + field.attrId);
+            for(DDAttr attr: ddClass.attributes)
+            {
+                String pdsDataType = id2type.get(attr.id);
+                if(pdsDataType == null) throw new Exception("No data type mapping for attribute " + attr.id);
+                
+                String fieldName = ddClass.nsName + "." + attr.nsName;
+                String solrDataType = dtMap.getSolrType(pdsDataType);
+                SolrSchemaUtils.writeSchemaField(writer, fieldName, solrDataType);
+            }
+        }
+    }
+
+    
+    public void printClasses() throws Exception
+    {
+        Map<String, String> id2type = attrParser.getIdToTypeMap();
+        
+        Set<String> classFilter = new HashSet<>();
+        classFilter.add("pds.Table_Character");
+        classFilter.add("pds.Record_Character");
+        classFilter.add("pds.Field_Character");
+        classFilter.add("pds.Group_Field_Character");
+        
+        for(DDClass ddClass: classParser.getClassMap().values())
+        {
+            if(!classFilter.contains(ddClass.nsName)) continue;
             
-            System.out.println(field.name + "  -->  " + pdsDataType);
+            System.out.println(ddClass.nsName);
+            
+            for(DDAttr attr: ddClass.attributes)
+            {
+                String pdsDataType = id2type.get(attr.id);
+                if(pdsDataType == null) throw new Exception("No data type mapping for attribute " + attr.id);
+                
+                System.out.println("    " + attr.nsName + "  -->  " + pdsDataType);
+            }
         }
     }
     

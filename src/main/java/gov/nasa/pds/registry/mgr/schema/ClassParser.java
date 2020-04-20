@@ -1,42 +1,28 @@
 package gov.nasa.pds.registry.mgr.schema;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
+
 public class ClassParser
 {    
-///////////////////////////////////////////////////////////////////////////////
-    
-    public static class Field
-    {
-        public String attrId;
-        public String name;
-        
-        public Field(String attrId)
-        {
-            this.attrId = attrId;
-        }
-    }
-
-///////////////////////////////////////////////////////////////////////////////    
-    
     private JsonReader rd;    
-    private List<Field> fields;
+    private Map<String, DDClass> classMap;
     
     
     public ClassParser(JsonReader rd)
     {
         this.rd = rd;
-        fields = new ArrayList<>();
+        classMap = new TreeMap<>();
     }
 
     
     public void parseClass() throws Exception
     {
-        String classNsName = null;
+        DDClass ddClass = null;
         
         rd.beginObject();
         
@@ -45,11 +31,12 @@ public class ClassParser
             String name = rd.nextName();
             if("identifier".equals(name))
             {
-                classNsName = stripAuthorityId(rd.nextString());
+                ddClass = new DDClass(stripAuthorityId(rd.nextString()));
+                classMap.put(ddClass.nsName, ddClass);
             }
             else if("associationList".equals(name))
             {
-                parseAssocList(classNsName);
+                parseAssocList(ddClass);
             }
             else
             {
@@ -61,13 +48,13 @@ public class ClassParser
     }
 
     
-    public List<Field> getFields()
+    public Map<String, DDClass> getClassMap()
     {
-        return fields;
+        return classMap;
     }
     
     
-    private void parseAssocList(String classNsName) throws Exception
+    private void parseAssocList(DDClass ddClass) throws Exception
     {
         rd.beginArray();
         
@@ -84,7 +71,9 @@ public class ClassParser
                     // ID will be NULL if association type != "attribute_of"
                     if(attrId != null)
                     {
-                        addField(classNsName, attrId);
+                        DDAttr attr = new DDAttr(attrId);
+                        attr.nsName = extractAttrNsName(attrId);
+                        ddClass.attributes.add(attr);
                     }
                 }
                 else
@@ -99,16 +88,6 @@ public class ClassParser
         rd.endArray();
     }
 
-    
-    private void addField(String classNsName, String attrId) throws Exception
-    {
-        Field field = new Field(attrId);
-        String attrNsName = extractAttrNsName(attrId);
-        field.name = classNsName + "." + attrNsName;
-
-        fields.add(field);
-    }
-    
     
     private String parseAssoc() throws Exception
     {
