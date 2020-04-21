@@ -65,6 +65,17 @@
             <artifactId>tika-core</artifactId>
             <version>1.23</version>
         </dependency>
+        <!-- Log4j logger -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.13.1</version>
+        </dependency>
         <!-- JSON parser -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
