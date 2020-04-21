@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import gov.nasa.pds.registry.mgr.schema.JsonSchemaParser;
+import gov.nasa.pds.registry.mgr.schema.SolrSchemaGenerator;
+import gov.nasa.pds.registry.mgr.schema.dd.DataDictionary;
+import gov.nasa.pds.registry.mgr.schema.dd.JsonDDParser;
 
 
 public class GenerateSolrSchemaCmd implements CliCommand
@@ -125,12 +127,15 @@ public class GenerateSolrSchemaCmd implements CliCommand
         File outFile = new File(outDir, "solr-fields.xml");
         FileWriter writer = new FileWriter(outFile);
         
+        SolrSchemaGenerator gen = new SolrSchemaGenerator();
+        
         for(File file: files)
         {
-            JsonSchemaParser parser = new JsonSchemaParser(file);
-            parser.parse();
-            parser.generateSolrSchema(writer);
+            JsonDDParser parser = new JsonDDParser(file);
+            DataDictionary dd = parser.parse();
             parser.close();
+            
+            gen.generateSolrSchema(dd, writer);
         }
         
         writer.close();

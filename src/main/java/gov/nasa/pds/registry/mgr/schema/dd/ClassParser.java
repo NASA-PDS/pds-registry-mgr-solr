@@ -1,4 +1,4 @@
-package gov.nasa.pds.registry.mgr.schema;
+package gov.nasa.pds.registry.mgr.schema.dd;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +31,7 @@ public class ClassParser
             String name = rd.nextName();
             if("identifier".equals(name))
             {
-                ddClass = new DDClass(stripAuthorityId(rd.nextString()));
+                ddClass = new DDClass(DDUtils.stripAuthorityId(rd.nextString()));
                 classMap.put(ddClass.nsName, ddClass);
             }
             else if("associationList".equals(name))
@@ -123,21 +123,12 @@ public class ClassParser
     }
 
 
-    private static String stripAuthorityId(String str)
-    {
-        if(str == null) return null;
-        
-        int idx = str.indexOf('.');
-        return (idx > 0) ? str.substring(idx + 1) : str;
-    }
-    
-    
     private static String extractAttrNsName(String str) throws Exception
     {
         if(str == null) return null;
         
         // Remove authority ID (e.g., '0001_NASA_PDS_1')
-        str = stripAuthorityId(str);
+        str = DDUtils.stripAuthorityId(str);
         
         // Remove class namespace and name
         int idx = str.indexOf('.');

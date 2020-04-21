@@ -1,4 +1,4 @@
-package gov.nasa.pds.registry.mgr.schema;
+package gov.nasa.pds.registry.mgr.schema.dd;
 
 import java.util.HashMap;
 import java.util.Map;

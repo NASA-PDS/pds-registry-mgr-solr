@@ -1,35 +1,28 @@
-package gov.nasa.pds.registry.mgr.schema;
+package gov.nasa.pds.registry.mgr.schema.dd;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+
 
 public class AttributeParser
 {
     private JsonReader rd;
     private int attrCount; 
 
-    private Set<String> dataTypes;
+    // Key = attribute ID, Value = attibute data type
     private Map<String, String> id2type;
+
     
     public AttributeParser(JsonReader rd)
     {
         this.rd = rd;
-        dataTypes = new TreeSet<>();
         id2type = new HashMap<>(2000);
     }
 
 
-    public Set<String> getDataTypes()
-    {
-        return dataTypes;
-    }
-    
-    
     public Map<String, String> getIdToTypeMap()
     {
         return id2type;
@@ -39,7 +32,7 @@ public class AttributeParser
     public void parseAttr() throws Exception
     {
         String id = null;
-        String dataType = null;
+        String dataTypeId = null;
         
         attrCount++;
         
@@ -52,9 +45,9 @@ public class AttributeParser
             {
                 id = rd.nextString();
             }
-            else if("dataType".equals(name))
+            else if("dataTypeId".equals(name))
             {
-                dataType = rd.nextString();
+                dataTypeId = rd.nextString();
             }
             else
             {
@@ -65,10 +58,9 @@ public class AttributeParser
         rd.endObject();
         
         if(id == null) throw new Exception("Missing identifier in attribute definition. Index = " + attrCount);
-        if(dataType == null) throw new Exception("Missing dataType in attribute definition. ID = " + id);
+        if(dataTypeId == null) throw new Exception("Missing dataTypeId in attribute definition. ID = " + id);
         
-        dataTypes.add(dataType);
-        id2type.put(id, dataType);
+        id2type.put(id, DDUtils.stripAuthorityId(dataTypeId));
     }
 
 }
