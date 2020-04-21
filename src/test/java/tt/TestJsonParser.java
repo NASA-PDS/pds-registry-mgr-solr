@@ -21,20 +21,27 @@ public class TestJsonParser
         String filePath = "/tmp/schema/PDS4_PDS_JSON_1D00.JSON";
         //String filePath = "/tmp/schema/PDS4_CART_1D00_1933.JSON";
         //String filePath = "/tmp/schema/PDS4_GEOM_1B10_1700.JSON";
+        //String filePath = "/tmp/schema/PDS4_IMG_1D00_1700.JSON";
         
         JsonDDParser parser = new JsonDDParser(new File(filePath));
         DataDictionary dd = parser.parse();
         parser.close();
         
+        //printDataTypes(dd);
+        
+        genSolrSchema(dd);
+    }
 
+    
+    private static void genSolrSchema(DataDictionary dd) throws Exception
+    {
         SolrSchemaGenerator gen = new SolrSchemaGenerator();
 
         FileWriter writer = new FileWriter("/tmp/t1.xml");
         gen.generateSolrSchema(dd, writer);
         writer.close();
-        
     }
-
+    
     
     private static void printDataTypes(DataDictionary dd)
     {

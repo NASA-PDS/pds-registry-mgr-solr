@@ -12,6 +12,7 @@ public class JsonDDParser
     private JsonReader rd;
     private ClassParser classParser;
     private AttributeParser attrParser;
+    private DataTypeParser dtParser;
 
     
     public JsonDDParser(File file) throws Exception
@@ -19,6 +20,7 @@ public class JsonDDParser
         rd = new JsonReader(new FileReader(file));
         classParser = new ClassParser(rd);
         attrParser = new AttributeParser(rd);
+        dtParser = new DataTypeParser(rd);
     }
     
     
@@ -65,6 +67,7 @@ public class JsonDDParser
         DataDictionary dd = new DataDictionary();
         dd.classMap = classParser.getClassMap();
         dd.attrDataTypes = attrParser.getIdToTypeMap();
+        dd.dataTypes = dtParser.getDataTypeNames();
         return dd;
     }
     
@@ -83,6 +86,10 @@ public class JsonDDParser
             else if("attributeDictionary".equals(name))
             {
                 parseAttrDic();
+            }
+            else if("dataTypeDictionary".equals(name))
+            {
+                parseDataTypeDic();
             }
             else
             {
@@ -149,4 +156,32 @@ public class JsonDDParser
         rd.endArray();
     }
 
+    
+    private void parseDataTypeDic() throws Exception
+    {
+        rd.beginArray();
+        
+        while(rd.hasNext() && rd.peek() != JsonToken.END_ARRAY)
+        {
+            rd.beginObject();
+
+            while(rd.hasNext() && rd.peek() != JsonToken.END_OBJECT)
+            {
+                String name = rd.nextName();
+                if("DataType".equals(name))
+                {
+                    dtParser.parseDataType();
+                }
+                else
+                {
+                    rd.skipValue();
+                }
+            }
+            
+            rd.endObject();
+        }
+        
+        rd.endArray();
+    }
+    
 }

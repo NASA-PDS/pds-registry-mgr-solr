@@ -10,6 +10,7 @@ import gov.nasa.pds.registry.mgr.schema.dd.DataDictionary;
 import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.SolrSchemaUtils;
 
+
 public class SolrSchemaGenerator
 {
     private Pds2SolrDataTypeMap dtMap;
@@ -28,9 +29,8 @@ public class SolrSchemaGenerator
         
         for(DDClass ddClass: dd.getClassMap().values())
         {
-            // Skip type definitions. Ignore namespaces for now.
-            String localName = extractLocalName(ddClass.nsName);
-            if(dataTypes.contains(localName)) continue;
+            // Skip type definitions.
+            if(dataTypes.contains(ddClass.nsName)) continue;
             
             for(DDAttr attr: ddClass.attributes)
             {
@@ -43,15 +43,5 @@ public class SolrSchemaGenerator
             }
         }
     }
-    
-    
-    private static String extractLocalName(String nsName)
-    {
-        if(nsName == null) return null;
-        
-        int idx = nsName.indexOf('.');
-        return (idx > 0) ? nsName.substring(idx+1) : nsName;
-    }
-
 
 }
