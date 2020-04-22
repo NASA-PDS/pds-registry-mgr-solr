@@ -175,6 +175,9 @@ public class RegistryManagerCli
         bld = Option.builder("configDir").hasArg().argName("dir");
         options.addOption(bld.build());
 
+        bld = Option.builder("config").hasArg().argName("path");
+        options.addOption(bld.build());
+
         bld = Option.builder("outDir").hasArg().argName("dir");
         options.addOption(bld.build());
         

@@ -5,7 +5,7 @@ import java.io.File;
 import gov.nasa.pds.registry.mgr.schema.cfg.ConfigReader;
 import gov.nasa.pds.registry.mgr.schema.cfg.Configuration;
 
-public class TestConfigParser
+public class TestConfigReader
 {
 
     public static void main(String[] args) throws Exception
