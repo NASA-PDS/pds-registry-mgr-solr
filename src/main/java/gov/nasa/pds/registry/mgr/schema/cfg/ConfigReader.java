@@ -37,13 +37,14 @@ public class ConfigReader
         }
         
         Configuration cfg = new Configuration();
-        cfg.ddFiles = parseDataDictionary(doc);
+        parseDataDictionary(doc, cfg);
+        parseClassFilters(doc, cfg);
 
         return cfg;
     }
 
 
-    private List<File> parseDataDictionary(Document doc) throws Exception
+    private void parseDataDictionary(Document doc, Configuration cfg) throws Exception
     {
         XPathUtils xpu = new XPathUtils();
         
@@ -69,6 +70,21 @@ public class ConfigReader
             ddFiles.add(file);
         }
         
-        return ddFiles;
+        cfg.ddFiles = ddFiles;
+    }
+    
+    
+    private void parseClassFilters(Document doc, Configuration cfg) throws Exception
+    {
+        XPathUtils xpu = new XPathUtils();
+        
+        cfg.includeClasses = xpu.getStringSet(doc, "/schemaGen/classFilters/include");
+        cfg.excludeClasses = xpu.getStringSet(doc, "/schemaGen/classFilters/exclude");
+        
+        if(cfg.includeClasses != null && cfg.includeClasses.size() > 0 
+                && cfg.excludeClasses != null && cfg.excludeClasses.size() > 0)
+        {
+            throw new Exception("<classFilters> could not have both <include> and <exclude> at the same time.");
+        }
     }
 }

@@ -1,5 +1,7 @@
 package gov.nasa.pds.registry.mgr.schema.dd;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -67,14 +69,8 @@ public class ClassParser
                 String name = rd.nextName();
                 if("association".equals(name))
                 {
-                    String attrId = parseAssoc();
-                    // ID will be NULL if association type != "attribute_of"
-                    if(attrId != null)
-                    {
-                        DDAttr attr = new DDAttr(attrId);
-                        attr.nsName = extractAttrNsName(attrId);
-                        ddClass.attributes.add(attr);
-                    }
+                    List<String> attrIds = parseAssoc();
+                    addAttributes(ddClass, attrIds);
                 }
                 else
                 {
@@ -89,9 +85,23 @@ public class ClassParser
     }
 
     
-    private String parseAssoc() throws Exception
+    private void addAttributes(DDClass ddClass, List<String> attrIds) throws Exception
     {
-        String id = null;
+        // IDs will be NULL if association type != "attribute_of"
+        if(attrIds == null) return;
+
+        for(String attrId: attrIds)
+        {
+            DDAttr attr = new DDAttr(attrId);
+            attr.nsName = extractAttrNsName(attrId);
+            ddClass.attributes.add(attr);
+        }
+    }
+    
+    
+    private List<String> parseAssoc() throws Exception
+    {
+        List<String> ids = null;
         boolean isAttribute = false;
         
         rd.beginObject();
@@ -99,17 +109,17 @@ public class ClassParser
         while(rd.hasNext() && rd.peek() != JsonToken.END_OBJECT)
         {
             String name = rd.nextName();
-            if("identifier".equals(name))
-            {
-                id = rd.nextString();
-            }
-            else if("assocType".equals(name))
+            if("assocType".equals(name))
             {
                 String val = rd.nextString();
                 if("attribute_of".equals(val))
                 {
                     isAttribute = true;
                 }
+            }
+            else if("attributeId".equals(name) && isAttribute)
+            {
+                ids = parseAttributeId();
             }
             else
             {
@@ -119,9 +129,26 @@ public class ClassParser
         
         rd.endObject();
         
-        return isAttribute ? id : null;
+        return isAttribute ? ids : null;
     }
+    
+    
+    private List<String> parseAttributeId() throws Exception
+    {
+        List<String> list = new ArrayList<>(2);
 
+        rd.beginArray();
+        
+        while(rd.hasNext() && rd.peek() != JsonToken.END_ARRAY)
+        {
+            list.add(rd.nextString());
+        }
+        
+        rd.endArray();
+
+        return list;
+    }
+    
 
     private static String extractAttrNsName(String str) throws Exception
     {
