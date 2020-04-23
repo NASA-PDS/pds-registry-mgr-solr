@@ -72,7 +72,7 @@ public class GenerateSolrSchemaCmd implements CliCommand
         
         SolrSchemaGenerator gen = new SolrSchemaGenerator(cfg, writer);
         
-        for(File file: cfg.ddFiles)
+        for(File file: cfg.dataDicFiles)
         {
             JsonDDParser parser = new JsonDDParser(file);
             DataDictionary dd = parser.parse();

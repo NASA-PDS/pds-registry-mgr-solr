@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.XPathUtils;
 import gov.nasa.pds.registry.mgr.util.XmlDomUtils;
 
@@ -43,7 +44,8 @@ public class ConfigReader
         parseDataDictionary(doc, cfg);
         parseClassFilters(doc, cfg);
         parseCustomGenerators(doc, cfg);
-
+        parseDataTypes(doc, cfg);
+        
         return cfg;
     }
 
@@ -74,7 +76,7 @@ public class ConfigReader
             ddFiles.add(file);
         }
         
-        cfg.ddFiles = ddFiles;
+        cfg.dataDicFiles = ddFiles;
     }
     
     
@@ -99,15 +101,14 @@ public class ConfigReader
         
         int count = xpu.getNodeCount(doc, "/schemaGen/customGenerators");
         if(count > 1) throw new Exception("Could not have more than one '/schemaGen/customGenerators' element.");
-        
         if(count != 1) return;
+
+        NodeList nodes = xpu.getNodeList(doc, "/schemaGen/customGenerators/class");
+        if(nodes == null || nodes.getLength() == 0) return;
         
         Node rootNode = xpu.getFirstNode(doc, "/schemaGen/customGenerators");
         String baseDirStr = XmlDomUtils.getAttribute(rootNode, "baseDir");
         File baseDir = (baseDirStr != null && !baseDirStr.isEmpty()) ? new File(baseDirStr) : null;
-        
-        NodeList nodes = xpu.getNodeList(doc, "/schemaGen/customGenerators/class");
-        if(nodes == null || nodes.getLength() == 0) return;
 
         Map<String, File> map = new TreeMap<>(); 
         for(int i = 0; i < nodes.getLength(); i++)
@@ -131,4 +132,30 @@ public class ConfigReader
         cfg.customClassGens = map;
     }
     
+    
+    private void parseDataTypes(Document doc, Configuration cfg) throws Exception
+    {
+        XPathUtils xpu = new XPathUtils();
+        
+        int count = xpu.getNodeCount(doc, "/schemaGen/dataTypes");
+        if(count > 1) throw new Exception("Could not have more than one '/schemaGen/dataTypes' element.");
+        if(count != 1) return;
+        
+        List<String> files = xpu.getStringList(doc, "/schemaGen/dataTypes/file");
+        if(files == null || files.isEmpty()) return; 
+
+        Node rootNode = xpu.getFirstNode(doc, "/schemaGen/dataTypes");
+        String baseDirStr = XmlDomUtils.getAttribute(rootNode, "baseDir");
+        File baseDir = (baseDirStr != null && !baseDirStr.isEmpty()) ? new File(baseDirStr) : null;
+        
+        List<File> ddFiles = new ArrayList<>();
+        for(String str: files)
+        {
+            File file = (baseDir == null) ? new File(str) : new File(baseDir, str);
+            ddFiles.add(file);
+        }
+        
+        cfg.dataTypeFiles = ddFiles;
+    }
+
 }

@@ -19,9 +19,9 @@ public class TestJsonParser
 
     public static void main(String[] args) throws Exception
     {
-        String filePath = "/tmp/schema/PDS4_PDS_JSON_1D00.JSON";
+        //String filePath = "/tmp/schema/PDS4_PDS_JSON_1D00.JSON";
         //String filePath = "/tmp/schema/PDS4_CART_1D00_1933.JSON";
-        //String filePath = "/tmp/schema/PDS4_GEOM_1B10_1700.JSON";
+        String filePath = "/tmp/schema/PDS4_GEOM_1E00_1700.JSON";
         //String filePath = "/tmp/schema/PDS4_IMG_1D00_1700.JSON";
         
         JsonDDParser parser = new JsonDDParser(new File(filePath));
@@ -29,7 +29,7 @@ public class TestJsonParser
         parser.close();
         
         //printDataTypes(dd);
-        //genSolrSchema(dd);
+        genSolrSchema(dd);
 
         printClasses(dd);
     }

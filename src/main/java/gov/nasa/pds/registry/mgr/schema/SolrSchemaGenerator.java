@@ -19,15 +19,27 @@ import gov.nasa.pds.registry.mgr.util.SolrSchemaUtils;
 public class SolrSchemaGenerator
 {
     private Configuration cfg;
-    private Pds2SolrDataTypeMap dtMap;
     private Writer writer;
     
+    private Pds2SolrDataTypeMap dtMap;
+    
 
-    public SolrSchemaGenerator(Configuration cfg, Writer writer)
+    public SolrSchemaGenerator(Configuration cfg, Writer writer) throws Exception
     {
+        if(cfg == null) throw new IllegalArgumentException("Missing configuration parameter.");
+        if(writer == null) throw new IllegalArgumentException("Missing writer parameter.");
+        
         this.cfg = cfg;
         this.writer = writer;
-        this.dtMap = new Pds2SolrDataTypeMap();
+        
+        dtMap = new Pds2SolrDataTypeMap();
+        if(cfg.dataTypeFiles != null)
+        {
+            for(File file: cfg.dataTypeFiles)
+            {
+                dtMap.load(file);
+            }
+        }
     }
 
 
@@ -51,7 +63,7 @@ public class SolrSchemaGenerator
                 if(cfg.excludeClasses.contains(ddClass.nsName)) continue;
             }
 
-            File customFile = cfg.customClassGens.get(ddClass.nsName);
+            File customFile = (cfg.customClassGens == null) ? null : cfg.customClassGens.get(ddClass.nsName);
             if(customFile != null)
             {
                 addCustomFields(ddClass, customFile);
