@@ -38,10 +38,11 @@ public class TestJsonParser
     private static void genSolrSchema(DataDictionary dd) throws Exception
     {
         Configuration cfg = new Configuration();
-        SolrSchemaGenerator gen = new SolrSchemaGenerator(cfg);
-
         FileWriter writer = new FileWriter("/tmp/t1.xml");
-        gen.generateSolrSchema(dd, writer);
+        
+        SolrSchemaGenerator gen = new SolrSchemaGenerator(cfg, writer);
+        gen.generateSolrSchema(dd);
+        
         writer.close();
     }
     

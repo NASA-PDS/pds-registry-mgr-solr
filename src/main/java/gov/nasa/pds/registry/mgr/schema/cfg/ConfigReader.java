@@ -3,6 +3,8 @@ package gov.nasa.pds.registry.mgr.schema.cfg;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.xpath.XPathFactory;
 
@@ -10,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import gov.nasa.pds.registry.mgr.util.XPathUtils;
 import gov.nasa.pds.registry.mgr.util.XmlDomUtils;
@@ -39,6 +42,7 @@ public class ConfigReader
         Configuration cfg = new Configuration();
         parseDataDictionary(doc, cfg);
         parseClassFilters(doc, cfg);
+        parseCustomGenerators(doc, cfg);
 
         return cfg;
     }
@@ -87,4 +91,44 @@ public class ConfigReader
             throw new Exception("<classFilters> could not have both <include> and <exclude> at the same time.");
         }
     }
+    
+
+    private void parseCustomGenerators(Document doc, Configuration cfg) throws Exception
+    {
+        XPathUtils xpu = new XPathUtils();
+        
+        int count = xpu.getNodeCount(doc, "/schemaGen/customGenerators");
+        if(count > 1) throw new Exception("Could not have more than one '/schemaGen/customGenerators' element.");
+        
+        if(count != 1) return;
+        
+        Node rootNode = xpu.getFirstNode(doc, "/schemaGen/customGenerators");
+        String baseDirStr = XmlDomUtils.getAttribute(rootNode, "baseDir");
+        File baseDir = (baseDirStr != null && !baseDirStr.isEmpty()) ? new File(baseDirStr) : null;
+        
+        NodeList nodes = xpu.getNodeList(doc, "/schemaGen/customGenerators/class");
+        if(nodes == null || nodes.getLength() == 0) return;
+
+        Map<String, File> map = new TreeMap<>(); 
+        for(int i = 0; i < nodes.getLength(); i++)
+        {
+            String className = XmlDomUtils.getAttribute(nodes.item(i), "name");
+            if(className == null || className.isBlank()) 
+            {
+                throw new Exception("//customGenerators/class[" +  i + "] missing attribute 'name'.");
+            }
+            
+            String filePath = XmlDomUtils.getAttribute(nodes.item(i), "file");
+            if(className == null || className.isBlank()) 
+            {
+                throw new Exception("//customGenerators/class[" +  i + "] missing attribute 'file'.");
+            }
+            
+            File file = (baseDir == null) ? new File(filePath) : new File(baseDir, filePath);
+            map.put(className, file);
+        }
+
+        cfg.customClassGens = map;
+    }
+    
 }

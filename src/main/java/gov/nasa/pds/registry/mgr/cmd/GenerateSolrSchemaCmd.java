@@ -70,7 +70,7 @@ public class GenerateSolrSchemaCmd implements CliCommand
         File outFile = new File(outDir, "solr-fields.xml");
         FileWriter writer = new FileWriter(outFile);
         
-        SolrSchemaGenerator gen = new SolrSchemaGenerator(cfg);
+        SolrSchemaGenerator gen = new SolrSchemaGenerator(cfg, writer);
         
         for(File file: cfg.ddFiles)
         {
@@ -78,7 +78,7 @@ public class GenerateSolrSchemaCmd implements CliCommand
             DataDictionary dd = parser.parse();
             parser.close();
             
-            gen.generateSolrSchema(dd, writer);
+            gen.generateSolrSchema(dd);
         }
         
         writer.close();

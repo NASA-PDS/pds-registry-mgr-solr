@@ -17,6 +17,17 @@ public class TestConfigReader
         {
             System.out.println(file);
         }
+        
+        if(conf.customClassGens != null)
+        {
+            System.out.println("\nCustom Generators:");
+            
+            for(String key: conf.customClassGens.keySet())
+            {
+                File file = conf.customClassGens.get(key);
+                System.out.println("  " + key + "  -->  " + file);
+            }
+        }
     }
 
 }
