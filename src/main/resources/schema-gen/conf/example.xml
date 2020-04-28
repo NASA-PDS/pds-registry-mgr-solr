@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schemaGen>
+
+  <dataDictionary baseDir="/tmp/schema">
+    <file>PDS4_PDS_JSON_1D00.JSON</file>
+  </dataDictionary>
+
+<!--
+  <dataTypes baseDir="/tmp/schema">
+    <file>data-types.cfg</file>
+  </dataTypes>
+-->
+
+<!--
+  <classFilters>
+    <include>pds.Bundle</include>
+  </classFilters>
+-->
+
+<!--
+  <customGenerators baseDir="/tmp/schema">
+    <class name="pds.Internal_Reference" file="pds.internal_reference.xml" />
+  </customGenerators>
+-->
+
+</schemaGen>

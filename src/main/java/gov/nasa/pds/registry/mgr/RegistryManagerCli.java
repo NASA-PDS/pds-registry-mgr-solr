@@ -15,6 +15,7 @@ import gov.nasa.pds.registry.mgr.cmd.CreateRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.DeleteDataCmd;
 import gov.nasa.pds.registry.mgr.cmd.DeleteRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.ExportFileCmd;
+import gov.nasa.pds.registry.mgr.cmd.GenerateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
 import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
 
@@ -40,12 +41,16 @@ public class RegistryManagerCli
 
         System.out.println();
         System.out.println("Commands:");
+        System.out.println();
+        System.out.println("Registry:");
         System.out.println("  load-data          Load data into registry collection");
         System.out.println("  delete-data        Delete data from registry collection");
         System.out.println("  export-file        Export a file from blob storage");
         System.out.println("  create-registry    Create registry collection");
         System.out.println("  delete-registry    Delete registry collection and all its data");
-
+        System.out.println();
+        System.out.println("Search:");
+        System.out.println("  generate-solr-schema  Generate Solr schema from one or more PDS data dictionaries");        
         System.out.println();
         System.out.println("Options:");
         System.out.println("  -help              Print help for a command");
@@ -139,6 +144,7 @@ public class RegistryManagerCli
         commands.put("export-file", new ExportFileCmd());
         commands.put("create-registry", new CreateRegistryCmd());
         commands.put("delete-registry", new DeleteRegistryCmd());
+        commands.put("generate-solr-schema", new GenerateSolrSchemaCmd());
     }
     
     
@@ -167,6 +173,12 @@ public class RegistryManagerCli
         options.addOption(bld.build());
 
         bld = Option.builder("configDir").hasArg().argName("dir");
+        options.addOption(bld.build());
+
+        bld = Option.builder("config").hasArg().argName("path");
+        options.addOption(bld.build());
+
+        bld = Option.builder("outDir").hasArg().argName("dir");
         options.addOption(bld.build());
         
         // delete-data command
