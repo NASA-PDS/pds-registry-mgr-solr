@@ -163,12 +163,6 @@ public class RegistryManagerCli
         bld = Option.builder("solrUrl").hasArg().argName("url");
         options.addOption(bld.build());
 
-        bld = Option.builder("shards").hasArg().argName("#");
-        options.addOption(bld.build());
-
-        bld = Option.builder("replicas").hasArg().argName("#");
-        options.addOption(bld.build());
-        
         bld = Option.builder("filePath").hasArg().argName("path");
         options.addOption(bld.build());
 
@@ -192,6 +186,16 @@ public class RegistryManagerCli
         options.addOption(bld.build());
         
         bld = Option.builder("all");
+        options.addOption(bld.build());
+        
+        // Create update collection
+        bld = Option.builder("collection").hasArg().argName("name");
+        options.addOption(bld.build());
+
+        bld = Option.builder("shards").hasArg().argName("#");
+        options.addOption(bld.build());
+
+        bld = Option.builder("replicas").hasArg().argName("#");
         options.addOption(bld.build());
     }
     

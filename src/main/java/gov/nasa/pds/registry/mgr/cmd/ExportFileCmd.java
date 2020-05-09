@@ -26,6 +26,9 @@ public class ExportFileCmd implements CliCommand
             return;
         }
         
+        // Collection name
+        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
+        
         // Lidvid
         String lidvid = cmdLine.getOptionValue("lidvid");
         if(lidvid == null) 
@@ -53,7 +56,7 @@ public class ExportFileCmd implements CliCommand
         try
         {
             // Get Solr doc by lidvid
-            QueryResponse resp = client.query(Constants.REGISTRY_COLLECTION, solrQuery);
+            QueryResponse resp = client.query(collectionName, solrQuery);
             long numDocs = resp.getResults().getNumFound();
             if(numDocs == 0)
             {
@@ -93,12 +96,13 @@ public class ExportFileCmd implements CliCommand
         System.out.println("Export a file from blob storage");
         System.out.println();
         System.out.println("Required parameters:");
-        System.out.println("  -lidvid <id>      Lidvid of a file to export from blob storage.");
-        System.out.println("  -filePath <path>  A path to a file to write."); 
+        System.out.println("  -lidvid <id>        Lidvid of a file to export from blob storage.");
+        System.out.println("  -filePath <path>    A path to a file to write."); 
         System.out.println("Optional parameters:");
-        System.out.println("  -solrUrl <url>    Solr URL. Default is http://localhost:8983/solr");
-        System.out.println("  -zkHost <host>    ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                    For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
+        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
+        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr");
+        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
         System.out.println();
     }
 

@@ -36,6 +36,9 @@ public class LoadDataCmd implements CliCommand
             return;
         }
 
+        // Solr collection name
+        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
+
         // Get list of files to load
         String filePath = cmdLine.getOptionValue("filePath");
         if(filePath == null) 
@@ -55,7 +58,7 @@ public class LoadDataCmd implements CliCommand
         {
             for(File file: files)
             {
-                loadFile(client, file);
+                loadFile(client, collectionName, file);
             }
             
             System.out.println("Done");
@@ -129,17 +132,17 @@ public class LoadDataCmd implements CliCommand
     }
     
     
-    private void loadFile(SolrClient client, File file) throws Exception
+    private void loadFile(SolrClient client, String collectionName, File file) throws Exception
     {
         System.out.println("Loading file: " + file.getAbsolutePath());
         
         ContentStreamUpdateRequest req = new ContentStreamUpdateRequest("/update");
-        req.setParam(CollectionAdminParams.COLLECTION, Constants.REGISTRY_COLLECTION);
+        req.setParam(CollectionAdminParams.COLLECTION, collectionName);
         req.setMethod(SolrRequest.METHOD.POST);
         req.addFile(file, XML_CTX_TYPE);
 
         req.process(client);
-        client.commit(Constants.REGISTRY_COLLECTION);
+        client.commit(collectionName);
     }
     
     
@@ -150,11 +153,13 @@ public class LoadDataCmd implements CliCommand
         System.out.println();
         System.out.println("Load data into registry collection");
         System.out.println();
-        System.out.println("Options:");
-        System.out.println("  -filePath <path>  An XML file or a directory to load. This is a required parameter."); 
-        System.out.println("  -solrUrl <url>    Solr URL. Default is http://localhost:8983/solr");
-        System.out.println("  -zkHost <host>    ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                    For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("Required parameters:");
+        System.out.println("  -filePath <path>    An XML file or a directory to load."); 
+        System.out.println("Optional parameters:");
+        System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
+        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
+        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
         System.out.println();
     }
 
