@@ -14,7 +14,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.XPathUtils;
 import gov.nasa.pds.registry.mgr.util.XmlDomUtils;
 
@@ -33,6 +32,7 @@ public class ConfigReader
     
     public Configuration read(File file) throws Exception
     {
+        System.out.println("Reading configuration from " + file.getAbsolutePath());
         Document doc = XmlDomUtils.readXml(file);
         String rootElement = doc.getDocumentElement().getNodeName();
         if(!"schemaGen".equals(rootElement))

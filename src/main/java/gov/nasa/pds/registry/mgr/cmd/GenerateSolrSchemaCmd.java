@@ -58,13 +58,9 @@ public class GenerateSolrSchemaCmd implements CliCommand
         System.out.println("Generate Solr schema from one or more PDS data dictionaries.");
         System.out.println();
         System.out.println("Required parameters:");
-        System.out.println("  -config <path>      Configuration file.");
+        System.out.println("  -config <path>  Configuration file.");
         System.out.println("Optional parameters:");
-        System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
-        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
-        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
-        System.out.println("  -outDir <dir>       Output directory for Solr schema file. Default value is '/tmp'."); 
+        System.out.println("  -outDir <dir>   Output directory for Solr schema file. Default value is '/tmp'."); 
         System.out.println();
     }
 
