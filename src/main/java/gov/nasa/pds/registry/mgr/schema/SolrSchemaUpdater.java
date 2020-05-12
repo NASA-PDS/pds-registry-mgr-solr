@@ -3,10 +3,15 @@ package gov.nasa.pds.registry.mgr.schema;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 
 import gov.nasa.pds.registry.mgr.schema.cfg.Configuration;
 import gov.nasa.pds.registry.mgr.schema.dd.DDAttr;
@@ -19,12 +24,15 @@ import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
 public class SolrSchemaUpdater
 {
+    private Logger LOG;
+    
     private Configuration cfg;
     private Pds2SolrDataTypeMap dtMap;
     private SolrClient solrClient;
     private String solrCollectionName;
     private Set<String> existingFieldNames;
     
+    private List<SchemaRequest.Update> batch = new ArrayList<>();
     private int totalCount;
     private int lastBatchCount;
     private int batchSize = 100;
@@ -32,6 +40,8 @@ public class SolrSchemaUpdater
     
     public SolrSchemaUpdater(Configuration cfg, SolrClient solrClient, String solrCollectionName) throws Exception
     {
+        LOG = LogManager.getLogger(getClass());
+
         this.cfg = cfg;
         this.solrClient = solrClient;
         this.solrCollectionName = solrCollectionName;
@@ -51,7 +61,7 @@ public class SolrSchemaUpdater
         {
             for(File file: cfg.dataTypeFiles)
             {
-                System.out.println("Loading PDS to Solr data type mapping from " + file.getAbsolutePath());
+                LOG.info("Loading PDS to Solr data type mapping from " + file.getAbsolutePath());
                 map.load(file);
             }
         }
@@ -64,6 +74,7 @@ public class SolrSchemaUpdater
     {
         lastBatchCount = 0;
         totalCount = 0;
+        batch.clear();
         
         Map<String, String> attrId2Type = dd.getAttributeDataTypeMap();
         Set<String> dataTypes = dd.getDataTypes();
@@ -143,17 +154,30 @@ public class SolrSchemaUpdater
     
     private void addSolrField(String name, String type)
     {
+        if(existingFieldNames.contains(name)) return;
+        
+        // Create add field request to the batch
+        batch.add(SolrUtils.createAddFieldRequest(name, type));
         totalCount++;
+
+        // Commit if reached batch/commit size
         if(totalCount % batchSize == 0)
         {
-            System.out.println("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+            LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+            // TODO: Call Schema API 
             lastBatchCount = totalCount;
+            batch.clear();
         }
     }
     
     
     private void finish()
     {
-        System.out.println("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+        if(batch.isEmpty()) return;
+        
+        LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+        // TODO: Call Schema API
+        lastBatchCount = totalCount;
+        batch.clear();
     }
 }

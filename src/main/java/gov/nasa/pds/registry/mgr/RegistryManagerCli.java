@@ -19,6 +19,7 @@ import gov.nasa.pds.registry.mgr.cmd.GenerateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
 import gov.nasa.pds.registry.mgr.cmd.UpdateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
+import gov.nasa.pds.registry.mgr.util.log.Log4jConfigurator;
 
 
 public class RegistryManagerCli
@@ -65,12 +66,14 @@ public class RegistryManagerCli
         
     public void run(String[] args)
     {
+        // Print help if there are no command line parameters
         if(args.length == 0)
         {
             printHelp();
             System.exit(1);
         }
 
+        // Parse command line arguments
         if(!parse(args))
         {
             System.out.println();
@@ -78,6 +81,10 @@ public class RegistryManagerCli
             System.exit(1);
         }
 
+        // Init logger
+        initLogger();
+        
+        // Run command
         if(!runCommand())
         {
             System.exit(1);
@@ -85,6 +92,15 @@ public class RegistryManagerCli
     }
 
 
+    private void initLogger()
+    {
+        String verbosity = cmdLine.getOptionValue("v", "1");
+        String logFile = cmdLine.getOptionValue("log");
+
+        Log4jConfigurator.configure(verbosity, logFile);
+    }
+
+    
     private boolean runCommand()
     {
         try
@@ -199,6 +215,13 @@ public class RegistryManagerCli
         options.addOption(bld.build());
 
         bld = Option.builder("replicas").hasArg().argName("#");
+        options.addOption(bld.build());
+        
+        // Logger
+        bld = Option.builder("log").hasArg().argName("file");
+        options.addOption(bld.build());
+        
+        bld = Option.builder("v").hasArg().argName("level");
         options.addOption(bld.build());
     }
     

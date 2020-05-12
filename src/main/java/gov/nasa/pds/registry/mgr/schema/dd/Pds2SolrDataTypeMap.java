@@ -6,15 +6,20 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
 
 public class Pds2SolrDataTypeMap
 {
+    private Logger LOG;
     private Map<String, String> map;
     
     
     public Pds2SolrDataTypeMap()
     {
+        LOG = LogManager.getLogger(getClass());
         map = new HashMap<>();
     }
 
@@ -25,7 +30,7 @@ public class Pds2SolrDataTypeMap
         if(solrType != null) return solrType;
         
         solrType = guessType(pdsType);
-        System.out.println("WARNING: No PDS to Solr data type mapping for '" 
+        LOG.warn("No PDS to Solr data type mapping for '" 
                 + pdsType + "'. Will use '" + solrType + "'");
 
         map.put(pdsType, solrType);
@@ -49,7 +54,7 @@ public class Pds2SolrDataTypeMap
     
     public void load(File file) throws Exception
     {
-        System.out.println("INFO: Loading data type configuration from " + file.getAbsolutePath());
+        LOG.info("Loading data type configuration from " + file.getAbsolutePath());
         
         BufferedReader rd = null;
         
