@@ -125,7 +125,7 @@ public class SolrUtils
                 }
             }
             
-            throw new Exception(ex);
+            throw ex;
         }
     }
     
