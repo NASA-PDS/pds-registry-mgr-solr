@@ -7,6 +7,9 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gov.nasa.pds.registry.mgr.schema.cfg.Configuration;
 import gov.nasa.pds.registry.mgr.schema.dd.DDAttr;
 import gov.nasa.pds.registry.mgr.schema.dd.DDClass;
@@ -18,6 +21,8 @@ import gov.nasa.pds.registry.mgr.util.SolrSchemaUtils;
 
 public class SolrSchemaGenerator
 {
+    private Logger LOG;
+
     private Configuration cfg;
     private Writer writer;
     
@@ -26,6 +31,8 @@ public class SolrSchemaGenerator
 
     public SolrSchemaGenerator(Configuration cfg, Writer writer) throws Exception
     {
+        LOG = LogManager.getLogger(getClass());
+        
         if(cfg == null) throw new IllegalArgumentException("Missing configuration parameter.");
         if(writer == null) throw new IllegalArgumentException("Missing writer parameter.");
         
@@ -78,6 +85,7 @@ public class SolrSchemaGenerator
     
     private void addCustomFields(DDClass ddClass, File file) throws Exception
     {
+        LOG.info("Loading custom generator. Class = " + ddClass.nsName + ", file = " + file.getAbsolutePath());
         BufferedReader rd = null;
         
         try
@@ -95,8 +103,21 @@ public class SolrSchemaGenerator
             String line;
             while((line = rd.readLine()) != null)
             {
-                writer.write(line);
-                writer.write("\n");
+                line = line.trim();
+                // Skip blank lines and comments
+                if(line.isEmpty() || line.startsWith("#")) continue;
+                
+                // Line format <field name> = <data type>
+                String tokens[] = line.split("=");
+                if(tokens.length != 2)
+                {
+                    throw new Exception("Invalid entry: " + line);
+                }
+                
+                String fieldName = tokens[0].trim();
+                String fieldType = tokens[1].trim();                
+                
+                SolrSchemaUtils.writeSchemaField(writer, fieldName, fieldType);
             }
         }
         finally

@@ -30,9 +30,6 @@ public class UpdateSolrSchemaCmd implements CliCommand
     @Override
     public void run(CommandLine cmdLine) throws Exception
     {
-        // NOTE: Do not get logger in constructor or static initializer!
-        LOG = LogManager.getLogger(getClass());
-        
         if(cmdLine.hasOption("help"))
         {
             printHelp();
@@ -47,7 +44,9 @@ public class UpdateSolrSchemaCmd implements CliCommand
             printHelp();
             return;
         }
-        
+
+        // NOTE: Do not get logger in constructor or static initializer!
+        LOG = LogManager.getLogger(getClass());
         // This logger does not depend on -v (verbosity) command line parameter.
         Logger minLogger = RegistryLogManager.getMinInfoLogger();
         
