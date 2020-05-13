@@ -42,9 +42,7 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println("Collection: " + collectionName);
         System.out.println("Shards: " + shards);
         System.out.println("Replicas: " + replicas);
-        System.out.println();
 
-        
         ZkClientClusterStateProvider zk = null;
         CloudSolrClient client = null;
         try

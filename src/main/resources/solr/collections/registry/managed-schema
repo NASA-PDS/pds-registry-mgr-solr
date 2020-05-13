@@ -39,6 +39,7 @@
     <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
 
     <!-- Types -->
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
     <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
     <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>

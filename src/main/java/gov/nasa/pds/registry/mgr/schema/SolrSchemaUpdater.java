@@ -75,7 +75,6 @@ public class SolrSchemaUpdater
         {
             for(File file: cfg.dataTypeFiles)
             {
-                LOG.info("Loading PDS to Solr data type mapping from " + file.getAbsolutePath());
                 map.load(file);
             }
         }
@@ -130,6 +129,7 @@ public class SolrSchemaUpdater
     
     private void addCustomFields(DDClass ddClass, File file) throws Exception
     {
+        LOG.info("Loading custom generator. Class = " + ddClass.nsName + ", file = " + file.getAbsolutePath());
         BufferedReader rd = null;
         
         try
@@ -147,7 +147,21 @@ public class SolrSchemaUpdater
             String line;
             while((line = rd.readLine()) != null)
             {
-
+                line = line.trim();
+                // Skip blank lines and comments
+                if(line.isEmpty() || line.startsWith("#")) continue;
+                
+                // Line format <field name> = <data type>
+                String tokens[] = line.split("=");
+                if(tokens.length != 2)
+                {
+                    throw new Exception("Invalid entry: " + line);
+                }
+                
+                String fieldName = tokens[0].trim();
+                String fieldType = tokens[1].trim();                
+                
+                addSolrField(fieldName, fieldType);
             }
         }
         finally
