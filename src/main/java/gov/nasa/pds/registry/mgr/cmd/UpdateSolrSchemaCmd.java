@@ -63,6 +63,8 @@ public class UpdateSolrSchemaCmd implements CliCommand
         
         // Update Solr schema
         updateSolrSchema(cfg, client, solrCollection);
+        
+        minLogger.info("Done.");
     }
 
     

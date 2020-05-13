@@ -109,7 +109,7 @@ public class RegistryManagerCli
         }
         catch(Exception ex)
         {
-            System.out.println("ERROR: " + ExceptionUtils.getMessage(ex));
+            System.out.println("[ERROR] " + ExceptionUtils.getMessage(ex));
             return false;
         }
         
@@ -127,20 +127,20 @@ public class RegistryManagerCli
             String[] args = cmdLine.getArgs();
             if(args == null || args.length == 0)
             {
-                System.out.println("ERROR: Missing command.");
+                System.out.println("[ERROR] Missing command.");
                 return false;
             }
 
             if(args.length > 1)
             {
-                System.out.println("ERROR: Invalid command: " + String.join(" ", args)); 
+                System.out.println("[ERROR] Invalid command: " + String.join(" ", args)); 
                 return false;
             }
             
             this.command = commands.get(args[0]);
             if(this.command == null)
             {
-                System.out.println("ERROR: Invalid command: " + args[0]);
+                System.out.println("[ERROR] Invalid command: " + args[0]);
                 return false;
             }
             
@@ -148,7 +148,7 @@ public class RegistryManagerCli
         }
         catch(ParseException ex)
         {
-            System.out.println("ERROR: " + ex.getMessage());
+            System.out.println("[ERROR] " + ex.getMessage());
             return false;
         }
     }

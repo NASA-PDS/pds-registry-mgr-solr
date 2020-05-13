@@ -21,7 +21,10 @@ import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
 import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
-
+/**
+ * Updates Solr schema by calling Solr schema API  
+ * @author karpenko
+ */
 public class SolrSchemaUpdater
 {
     private Logger LOG;
@@ -37,7 +40,13 @@ public class SolrSchemaUpdater
     private int lastBatchCount;
     private int batchSize = 100;
     
-    
+    /**
+     * Constructor 
+     * @param cfg Registry manager configuration
+     * @param solrClient Solr client
+     * @param solrCollectionName Solr collection name
+     * @throws Exception
+     */
     public SolrSchemaUpdater(Configuration cfg, SolrClient solrClient, String solrCollectionName) throws Exception
     {
         LOG = LogManager.getLogger(getClass());
@@ -54,6 +63,11 @@ public class SolrSchemaUpdater
     }
 
 
+    /**
+     * Load PDS to Solr data type map(s)
+     * @return
+     * @throws Exception
+     */
     private Pds2SolrDataTypeMap loadDataTypeMap() throws Exception
     {
         Pds2SolrDataTypeMap map = new Pds2SolrDataTypeMap();
@@ -70,6 +84,11 @@ public class SolrSchemaUpdater
     }
 
     
+    /**
+     * Add fields from data dictionary to Solr schema. Ignore existing fields.
+     * @param dd
+     * @throws Exception
+     */
     public void updateSolrSchema(DataDictionary dd) throws Exception
     {
         lastBatchCount = 0;
@@ -152,7 +171,7 @@ public class SolrSchemaUpdater
     }
 
     
-    private void addSolrField(String name, String type)
+    private void addSolrField(String name, String type) throws Exception
     {
         if(existingFieldNames.contains(name)) return;
         
@@ -164,19 +183,19 @@ public class SolrSchemaUpdater
         if(totalCount % batchSize == 0)
         {
             LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
-            // TODO: Call Schema API 
+            SolrUtils.multiUpdate(solrClient, solrCollectionName, batch);
             lastBatchCount = totalCount;
             batch.clear();
         }
     }
     
     
-    private void finish()
+    private void finish() throws Exception
     {
         if(batch.isEmpty()) return;
         
         LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
-        // TODO: Call Schema API
+        SolrUtils.multiUpdate(solrClient, solrCollectionName, batch);
         lastBatchCount = totalCount;
         batch.clear();
     }
