@@ -189,6 +189,8 @@ public class SolrSchemaUpdater
     {
         if(existingFieldNames.contains(name)) return;
         
+        existingFieldNames.add(name);
+        
         // Create add field request to the batch
         batch.add(SolrUtils.createAddFieldRequest(name, type));
         totalCount++;

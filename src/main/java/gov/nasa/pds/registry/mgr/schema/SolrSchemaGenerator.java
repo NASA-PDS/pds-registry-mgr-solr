@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Writer;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ public class SolrSchemaGenerator
     private Writer writer;
     
     private Pds2SolrDataTypeMap dtMap;
+    private Set<String> existingFieldNames;
     
 
     public SolrSchemaGenerator(Configuration cfg, Writer writer) throws Exception
@@ -38,15 +40,26 @@ public class SolrSchemaGenerator
         
         this.cfg = cfg;
         this.writer = writer;
-        
-        dtMap = new Pds2SolrDataTypeMap();
+
+        // Load PDS to Solr data type mapping files
+        dtMap = loadDataTypeMap();
+
+        existingFieldNames = new HashSet<String>(2000);
+    }
+
+    
+    private Pds2SolrDataTypeMap loadDataTypeMap() throws Exception
+    {
+        Pds2SolrDataTypeMap map = new Pds2SolrDataTypeMap();
         if(cfg.dataTypeFiles != null)
         {
             for(File file: cfg.dataTypeFiles)
             {
-                dtMap.load(file);
+                map.load(file);
             }
         }
+        
+        return map;
     }
 
 
@@ -116,8 +129,7 @@ public class SolrSchemaGenerator
                 
                 String fieldName = tokens[0].trim();
                 String fieldType = tokens[1].trim();                
-                
-                SolrSchemaUtils.writeSchemaField(writer, fieldName, fieldType);
+                addSolrField(fieldName, fieldType);
             }
         }
         finally
@@ -136,8 +148,16 @@ public class SolrSchemaGenerator
             
             String fieldName = ddClass.nsName + "." + attr.nsName;
             String solrDataType = dtMap.getSolrType(pdsDataType);
-            SolrSchemaUtils.writeSchemaField(writer, fieldName, solrDataType);
+            addSolrField(fieldName, solrDataType);
         }
     }
 
+    
+    private void addSolrField(String name, String type) throws Exception
+    {
+        if(existingFieldNames.contains(name)) return;        
+        existingFieldNames.add(name);
+        
+        SolrSchemaUtils.writeSchemaField(writer, name, type);
+    }
 }
