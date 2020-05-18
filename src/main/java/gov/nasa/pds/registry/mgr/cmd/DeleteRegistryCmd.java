@@ -30,9 +30,8 @@ public class DeleteRegistryCmd implements CliCommand
         }
         
         String zkHost = cmdLine.getOptionValue("zkHost", "localhost:9983");
+        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
 
-        System.out.println("Deleting registry collection");
-        System.out.println();
         System.out.println("ZooKeeper host: " + zkHost);
 
         ZkClientClusterStateProvider zk = null;
@@ -42,8 +41,8 @@ public class DeleteRegistryCmd implements CliCommand
             zk = new ZkClientClusterStateProvider(zkHost);
             client = new CloudSolrClient.Builder(zk).build();
             
-            deleteCollection(client);
-            deleteConfigSet(client);
+            deleteCollection(client, collectionName);
+            deleteConfigSet(client, collectionName);
         }
         finally
         {
@@ -53,10 +52,10 @@ public class DeleteRegistryCmd implements CliCommand
     }
 
     
-    private void deleteCollection(CloudSolrClient client)
+    private void deleteCollection(CloudSolrClient client, String collectionName)
     {
-        System.out.println("Deleting collection...");
-        CollectionAdminRequest.Delete req = CollectionAdminRequest.Delete.deleteCollection(Constants.REGISTRY_COLLECTION);
+        System.out.println("Deleting collection " + collectionName + "...");
+        CollectionAdminRequest.Delete req = CollectionAdminRequest.Delete.deleteCollection(collectionName);
         
         try
         {
@@ -70,11 +69,11 @@ public class DeleteRegistryCmd implements CliCommand
     }
     
 
-    private void deleteConfigSet(CloudSolrClient client)
+    private void deleteConfigSet(CloudSolrClient client, String collectionName)
     {
-        System.out.println("Deleting configset...");
+        System.out.println("Deleting configset " + collectionName + "...");
         ConfigSetAdminRequest.Delete req = new ConfigSetAdminRequest.Delete();
-        req.setConfigSetName(Constants.REGISTRY_COLLECTION);
+        req.setConfigSetName(collectionName);
         
         try
         {
@@ -97,9 +96,10 @@ public class DeleteRegistryCmd implements CliCommand
         System.out.println("Delete registry collection and all its data");
         System.out.println();
         System.out.println("Optional parameters:");
-        System.out.println("  -zkHost <host>  ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                  For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
-        System.out.println("                  Default value is localhost:9983");
+        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
+        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("                      Default value is localhost:9983");
+        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
     }
 
 }

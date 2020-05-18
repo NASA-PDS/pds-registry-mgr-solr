@@ -6,28 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.XPathUtils;
 import gov.nasa.pds.registry.mgr.util.XmlDomUtils;
 
 
 public class ConfigReader
 {
-    private Logger LOG;
-    
-    XPathFactory xpf = XPathFactory.newInstance();
-    
     public ConfigReader()
     {
-        LOG = LogManager.getLogger(getClass());
     }
     
     

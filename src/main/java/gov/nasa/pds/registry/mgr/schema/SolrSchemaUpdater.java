@@ -3,13 +3,15 @@ package gov.nasa.pds.registry.mgr.schema;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.Writer;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 
 import gov.nasa.pds.registry.mgr.schema.cfg.Configuration;
 import gov.nasa.pds.registry.mgr.schema.dd.DDAttr;
@@ -17,37 +19,55 @@ import gov.nasa.pds.registry.mgr.schema.dd.DDClass;
 import gov.nasa.pds.registry.mgr.schema.dd.DataDictionary;
 import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
-import gov.nasa.pds.registry.mgr.util.SolrSchemaUtils;
+import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
-
-public class SolrSchemaGenerator
+/**
+ * Updates Solr schema by calling Solr schema API  
+ * @author karpenko
+ */
+public class SolrSchemaUpdater
 {
     private Logger LOG;
-
-    private Configuration cfg;
-    private Writer writer;
     
+    private Configuration cfg;
     private Pds2SolrDataTypeMap dtMap;
+    private SolrClient solrClient;
+    private String solrCollectionName;
     private Set<String> existingFieldNames;
     
-
-    public SolrSchemaGenerator(Configuration cfg, Writer writer) throws Exception
+    private List<SchemaRequest.Update> batch = new ArrayList<>();
+    private int totalCount;
+    private int lastBatchCount;
+    private int batchSize = 100;
+    
+    /**
+     * Constructor 
+     * @param cfg Registry manager configuration
+     * @param solrClient Solr client
+     * @param solrCollectionName Solr collection name
+     * @throws Exception
+     */
+    public SolrSchemaUpdater(Configuration cfg, SolrClient solrClient, String solrCollectionName) throws Exception
     {
         LOG = LogManager.getLogger(getClass());
-        
-        if(cfg == null) throw new IllegalArgumentException("Missing configuration parameter.");
-        if(writer == null) throw new IllegalArgumentException("Missing writer parameter.");
-        
-        this.cfg = cfg;
-        this.writer = writer;
 
+        this.cfg = cfg;
+        this.solrClient = solrClient;
+        this.solrCollectionName = solrCollectionName;
+        
         // Load PDS to Solr data type mapping files
         dtMap = loadDataTypeMap();
-
-        existingFieldNames = new HashSet<String>(2000);
+        
+        // Get a list of existing field names from Solr
+        this.existingFieldNames = SolrUtils.getFieldNames(solrClient, solrCollectionName);
     }
 
-    
+
+    /**
+     * Load PDS to Solr data type map(s)
+     * @return
+     * @throws Exception
+     */
     private Pds2SolrDataTypeMap loadDataTypeMap() throws Exception
     {
         Pds2SolrDataTypeMap map = new Pds2SolrDataTypeMap();
@@ -62,9 +82,18 @@ public class SolrSchemaGenerator
         return map;
     }
 
-
-    public void generateSolrSchema(DataDictionary dd) throws Exception
+    
+    /**
+     * Add fields from data dictionary to Solr schema. Ignore existing fields.
+     * @param dd
+     * @throws Exception
+     */
+    public void updateSolrSchema(DataDictionary dd) throws Exception
     {
+        lastBatchCount = 0;
+        totalCount = 0;
+        batch.clear();
+        
         Map<String, String> attrId2Type = dd.getAttributeDataTypeMap();
         Set<String> dataTypes = dd.getDataTypes();
         
@@ -93,6 +122,8 @@ public class SolrSchemaGenerator
                 addClassAttributes(ddClass, attrId2Type);
             }
         }
+        
+        finish();
     }
     
     
@@ -129,6 +160,7 @@ public class SolrSchemaGenerator
                 
                 String fieldName = tokens[0].trim();
                 String fieldType = tokens[1].trim();                
+                
                 addSolrField(fieldName, fieldType);
             }
         }
@@ -155,9 +187,32 @@ public class SolrSchemaGenerator
     
     private void addSolrField(String name, String type) throws Exception
     {
-        if(existingFieldNames.contains(name)) return;        
+        if(existingFieldNames.contains(name)) return;
+        
         existingFieldNames.add(name);
         
-        SolrSchemaUtils.writeSchemaField(writer, name, type);
+        // Create add field request to the batch
+        batch.add(SolrUtils.createAddFieldRequest(name, type));
+        totalCount++;
+
+        // Commit if reached batch/commit size
+        if(totalCount % batchSize == 0)
+        {
+            LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+            SolrUtils.multiUpdate(solrClient, solrCollectionName, batch);
+            lastBatchCount = totalCount;
+            batch.clear();
+        }
+    }
+    
+    
+    private void finish() throws Exception
+    {
+        if(batch.isEmpty()) return;
+        
+        LOG.info("Adding fields " + (lastBatchCount+1) + "-" + totalCount);
+        SolrUtils.multiUpdate(solrClient, solrCollectionName, batch);
+        lastBatchCount = totalCount;
+        batch.clear();
     }
 }

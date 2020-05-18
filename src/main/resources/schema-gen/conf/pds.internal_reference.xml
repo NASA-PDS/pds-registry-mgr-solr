@@ -1,7 +1,0 @@
-
-<!-- References -->
-<field name="ref_document_lid" type="string" indexed="true" stored="true" required="false" multiValued="true" />
-<field name="ref_instrument_lid" type="string" indexed="true" stored="true" required="false" multiValued="true" />
-<field name="ref_instrument_host_lid" type="string" indexed="true" stored="true" required="false" multiValued="true" />
-<field name="ref_investigation_lid" type="string" indexed="true" stored="true" required="false" multiValued="true" />
-<field name="ref_target_lid" type="string" indexed="true" stored="true" required="false" multiValued="true" />

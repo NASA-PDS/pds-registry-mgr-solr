@@ -31,6 +31,7 @@ public class CreateRegistryCmd implements CliCommand
         String zkHost = cmdLine.getOptionValue("zkHost", "localhost:9983");
         File configDir = getConfigDir(cmdLine.getOptionValue("configDir"));
         
+        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
         int shards = parseShards(cmdLine.getOptionValue("shards", "1"));
         int replicas = parseReplicas(cmdLine.getOptionValue("replicas", "1"));
         
@@ -38,23 +39,22 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println();
         System.out.println("ZooKeeper host: " + zkHost);
         System.out.println("Configuration directory: " + configDir.getAbsolutePath());
+        System.out.println("Collection: " + collectionName);
         System.out.println("Shards: " + shards);
         System.out.println("Replicas: " + replicas);
-        System.out.println();
 
-        
         ZkClientClusterStateProvider zk = null;
         CloudSolrClient client = null;
         try
         {
             System.out.println("Uploading configuration...");
             zk = new ZkClientClusterStateProvider(zkHost);
-            zk.uploadConfig(configDir.toPath(), Constants.REGISTRY_COLLECTION);
+            zk.uploadConfig(configDir.toPath(), collectionName);
     
             System.out.println("Creating collection...");
             client = new CloudSolrClient.Builder(zk).build();
             CollectionAdminRequest.Create req = CollectionAdminRequest.Create
-                    .createCollection(Constants.REGISTRY_COLLECTION, Constants.REGISTRY_COLLECTION, 1, 1);
+                    .createCollection(collectionName, collectionName, 1, 1);
 
             @SuppressWarnings("unused")
             CollectionAdminResponse resp = req.process(client);
@@ -141,6 +141,7 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println("                      Default value is localhost:9983");
         System.out.println("  -configDir <dir>    Configuration directory with registry collection configuration files"); 
         System.out.println("                      Default value is $REGISTRY_MANAGER_HOME/solr/collections/registry");
+        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
         System.out.println("  -shards <number>    Number of shards for registry collection. Default value is 1");
         System.out.println("  -replicas <number>  Number of replicas for registry collection. Default value is 1");
         System.out.println();

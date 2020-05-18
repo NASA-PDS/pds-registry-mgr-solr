@@ -17,7 +17,9 @@ import gov.nasa.pds.registry.mgr.cmd.DeleteRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.ExportFileCmd;
 import gov.nasa.pds.registry.mgr.cmd.GenerateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
+import gov.nasa.pds.registry.mgr.cmd.UpdateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
+import gov.nasa.pds.registry.mgr.util.log.Log4jConfigurator;
 
 
 public class RegistryManagerCli
@@ -43,17 +45,18 @@ public class RegistryManagerCli
         System.out.println("Commands:");
         System.out.println();
         System.out.println("Registry:");
-        System.out.println("  load-data          Load data into registry collection");
-        System.out.println("  delete-data        Delete data from registry collection");
-        System.out.println("  export-file        Export a file from blob storage");
-        System.out.println("  create-registry    Create registry collection");
-        System.out.println("  delete-registry    Delete registry collection and all its data");
+        System.out.println("  load-data        Load data into registry collection");
+        System.out.println("  delete-data      Delete data from registry collection");
+        System.out.println("  export-file      Export a file from blob storage");
+        System.out.println("  create-registry  Create registry collection");
+        System.out.println("  delete-registry  Delete registry collection and all its data");
         System.out.println();
         System.out.println("Search:");
         System.out.println("  generate-solr-schema  Generate Solr schema from one or more PDS data dictionaries");        
+        System.out.println("  update-solr-schema    Update Solr schema from one or more PDS data dictionaries");
         System.out.println();
         System.out.println("Options:");
-        System.out.println("  -help              Print help for a command");
+        System.out.println("  -help  Print help for a command");
         
         System.out.println();
         System.out.println("Pass -help after any command to see command-specific usage information, for example,");
@@ -63,12 +66,14 @@ public class RegistryManagerCli
         
     public void run(String[] args)
     {
+        // Print help if there are no command line parameters
         if(args.length == 0)
         {
             printHelp();
             System.exit(1);
         }
 
+        // Parse command line arguments
         if(!parse(args))
         {
             System.out.println();
@@ -76,6 +81,10 @@ public class RegistryManagerCli
             System.exit(1);
         }
 
+        // Init logger
+        initLogger();
+        
+        // Run command
         if(!runCommand())
         {
             System.exit(1);
@@ -83,6 +92,15 @@ public class RegistryManagerCli
     }
 
 
+    private void initLogger()
+    {
+        String verbosity = cmdLine.getOptionValue("v", "1");
+        String logFile = cmdLine.getOptionValue("log");
+
+        Log4jConfigurator.configure(verbosity, logFile);
+    }
+
+    
     private boolean runCommand()
     {
         try
@@ -91,7 +109,7 @@ public class RegistryManagerCli
         }
         catch(Exception ex)
         {
-            System.out.println("ERROR: " + ExceptionUtils.getMessage(ex));
+            System.out.println("[ERROR] " + ExceptionUtils.getMessage(ex));
             return false;
         }
         
@@ -109,20 +127,20 @@ public class RegistryManagerCli
             String[] args = cmdLine.getArgs();
             if(args == null || args.length == 0)
             {
-                System.out.println("ERROR: Missing command.");
+                System.out.println("[ERROR] Missing command.");
                 return false;
             }
 
             if(args.length > 1)
             {
-                System.out.println("ERROR: Invalid command: " + String.join(" ", args)); 
+                System.out.println("[ERROR] Invalid command: " + String.join(" ", args)); 
                 return false;
             }
             
             this.command = commands.get(args[0]);
             if(this.command == null)
             {
-                System.out.println("ERROR: Invalid command: " + args[0]);
+                System.out.println("[ERROR] Invalid command: " + args[0]);
                 return false;
             }
             
@@ -130,7 +148,7 @@ public class RegistryManagerCli
         }
         catch(ParseException ex)
         {
-            System.out.println("ERROR: " + ex.getMessage());
+            System.out.println("[ERROR] " + ex.getMessage());
             return false;
         }
     }
@@ -145,6 +163,7 @@ public class RegistryManagerCli
         commands.put("create-registry", new CreateRegistryCmd());
         commands.put("delete-registry", new DeleteRegistryCmd());
         commands.put("generate-solr-schema", new GenerateSolrSchemaCmd());
+        commands.put("update-solr-schema", new UpdateSolrSchemaCmd());
     }
     
     
@@ -163,12 +182,6 @@ public class RegistryManagerCli
         bld = Option.builder("solrUrl").hasArg().argName("url");
         options.addOption(bld.build());
 
-        bld = Option.builder("shards").hasArg().argName("#");
-        options.addOption(bld.build());
-
-        bld = Option.builder("replicas").hasArg().argName("#");
-        options.addOption(bld.build());
-        
         bld = Option.builder("filePath").hasArg().argName("path");
         options.addOption(bld.build());
 
@@ -192,6 +205,23 @@ public class RegistryManagerCli
         options.addOption(bld.build());
         
         bld = Option.builder("all");
+        options.addOption(bld.build());
+        
+        // Create update collection
+        bld = Option.builder("collection").hasArg().argName("name");
+        options.addOption(bld.build());
+
+        bld = Option.builder("shards").hasArg().argName("#");
+        options.addOption(bld.build());
+
+        bld = Option.builder("replicas").hasArg().argName("#");
+        options.addOption(bld.build());
+        
+        // Logger
+        bld = Option.builder("log").hasArg().argName("file");
+        options.addOption(bld.build());
+        
+        bld = Option.builder("v").hasArg().argName("level");
         options.addOption(bld.build());
     }
     

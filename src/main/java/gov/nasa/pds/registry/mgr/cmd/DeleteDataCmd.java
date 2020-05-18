@@ -26,6 +26,8 @@ public class DeleteDataCmd implements CliCommand
             return;
         }
 
+        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
+        
         String query = buildSolrQuery(cmdLine);
         if(query == null)
         {
@@ -43,14 +45,14 @@ public class DeleteDataCmd implements CliCommand
             // I could not find a way to get number of deleted docs from a delete query.
             SolrQuery solrQuery = new SolrQuery(query);
             solrQuery.setRows(0);
-            QueryResponse resp = client.query(Constants.REGISTRY_COLLECTION, solrQuery);
+            QueryResponse resp = client.query(collectionName, solrQuery);
             long numDocs = resp.getResults().getNumFound();
             
             // Run delete command
             if(numDocs > 0)
             {
-                client.deleteByQuery(Constants.REGISTRY_COLLECTION, query);
-                client.commit(Constants.REGISTRY_COLLECTION);
+                client.deleteByQuery(collectionName, query);
+                client.commit(collectionName);
             }
             
             System.out.println("Deleted " + numDocs + " document(s)");
@@ -98,14 +100,16 @@ public class DeleteDataCmd implements CliCommand
         System.out.println();
         System.out.println("Delete data from registry collection");
         System.out.println();
-        System.out.println("Options:");
-        System.out.println("  -lidvid <id>     Delete data by lidvid");
-        System.out.println("  -lid <id>        Delete data by lid");
-        System.out.println("  -packageId <id>  Delete data by package id"); 
-        System.out.println("  -all             Delete all data");
-        System.out.println("  -solrUrl <url>   Solr URL. Default is http://localhost:8983/solr");
-        System.out.println("  -zkHost <host>   ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                   For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("Required parameters, one of:");
+        System.out.println("  -lidvid <id>        Delete data by lidvid");
+        System.out.println("  -lid <id>           Delete data by lid");
+        System.out.println("  -packageId <id>     Delete data by package id"); 
+        System.out.println("  -all                Delete all data");
+        System.out.println("Optional parameters:");
+        System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
+        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
+        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr");
+        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
         System.out.println();
     }
 
