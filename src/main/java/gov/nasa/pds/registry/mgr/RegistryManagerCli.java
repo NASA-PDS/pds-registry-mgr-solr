@@ -17,6 +17,7 @@ import gov.nasa.pds.registry.mgr.cmd.DeleteRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.ExportFileCmd;
 import gov.nasa.pds.registry.mgr.cmd.GenerateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
+import gov.nasa.pds.registry.mgr.cmd.SetArchiveStatusCmd;
 import gov.nasa.pds.registry.mgr.cmd.UpdateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.util.ExceptionUtils;
 import gov.nasa.pds.registry.mgr.util.log.Log4jConfigurator;
@@ -45,11 +46,13 @@ public class RegistryManagerCli
         System.out.println("Commands:");
         System.out.println();
         System.out.println("Registry:");
-        System.out.println("  load-data        Load data into registry collection");
-        System.out.println("  delete-data      Delete data from registry collection");
-        System.out.println("  export-file      Export a file from blob storage");
-        System.out.println("  create-registry  Create registry collection");
-        System.out.println("  delete-registry  Delete registry collection and all its data");
+        System.out.println("  create-registry       Create registry collection");
+        System.out.println("  delete-registry       Delete registry collection and all its data");
+        System.out.println("  load-data             Load data into registry collection");
+        System.out.println("  delete-data           Delete data from registry collection");
+        System.out.println("  export-file           Export a file from blob storage");
+        System.out.println("  set-archive-status    Set product archive status");        
+        
         System.out.println();
         System.out.println("Search:");
         System.out.println("  generate-solr-schema  Generate Solr schema from one or more PDS data dictionaries");        
@@ -164,6 +167,7 @@ public class RegistryManagerCli
         commands.put("delete-registry", new DeleteRegistryCmd());
         commands.put("generate-solr-schema", new GenerateSolrSchemaCmd());
         commands.put("update-solr-schema", new UpdateSolrSchemaCmd());
+        commands.put("set-archive-status", new SetArchiveStatusCmd());        
     }
     
     
@@ -205,6 +209,10 @@ public class RegistryManagerCli
         options.addOption(bld.build());
         
         bld = Option.builder("all");
+        options.addOption(bld.build());
+        
+        // Status
+        bld = Option.builder("status").hasArg().argName("status");
         options.addOption(bld.build());
         
         // Create update collection
