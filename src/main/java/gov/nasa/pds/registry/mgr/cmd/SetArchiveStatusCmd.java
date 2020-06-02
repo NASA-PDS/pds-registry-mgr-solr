@@ -1,33 +1,44 @@
 package gov.nasa.pds.registry.mgr.cmd;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.cli.CommandLine;
+import org.apache.solr.client.solrj.SolrClient;
 
 import gov.nasa.pds.registry.mgr.Constants;
+import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
 public class SetArchiveStatusCmd implements CliCommand
 {
-    private static String[] STATUS_NAME = 
-    {
-        "ARCHIVED",
-        "ARCHIVED_ACCUMULATING",
-        "IN_LIEN_RESOLUTION",
-        "IN_LIEN_RESOLUTION_ACCUMULATING",
-        "IN_PEER_REVIEW",
-        "IN_PEER_REVIEW_ACCUMULATING",
-        "IN_QUEUE",
-        "IN_QUEUE_ACCUMULATING",
-        "LOCALLY_ARCHIVED",
-        "LOCALLY_ARCHIVED_ACCUMULATING",
-        "PRE_PEER_REVIEW",
-        "PRE_PEER_REVIEW_ACCUMULATING",
-        "SAFED",
-        "STAGED",
-        "SUPERSEDED"
-    };
+    private static final String DEFAULT_STATUS_NAME = "STAGED";
+    private Set<String> STATUS_NAME; 
 
+    private String collectionName;
+    private String status;
+    private String lidvid;
+    private String packageId;
+    
     
     public SetArchiveStatusCmd()
     {
+        STATUS_NAME = new TreeSet<>();
+
+        STATUS_NAME.add("ARCHIVED");
+        STATUS_NAME.add("ARCHIVED_ACCUMULATING");
+        STATUS_NAME.add("IN_LIEN_RESOLUTION");
+        STATUS_NAME.add("IN_LIEN_RESOLUTION_ACCUMULATING");
+        STATUS_NAME.add("IN_PEER_REVIEW");
+        STATUS_NAME.add("IN_PEER_REVIEW_ACCUMULATING");
+        STATUS_NAME.add("IN_QUEUE");
+        STATUS_NAME.add("IN_QUEUE_ACCUMULATING");
+        STATUS_NAME.add("LOCALLY_ARCHIVED");
+        STATUS_NAME.add("LOCALLY_ARCHIVED_ACCUMULATING");
+        STATUS_NAME.add("PRE_PEER_REVIEW");
+        STATUS_NAME.add("PRE_PEER_REVIEW_ACCUMULATING");
+        STATUS_NAME.add("SAFED");
+        STATUS_NAME.add("STAGED");
+        STATUS_NAME.add("SUPERSEDED");
     }
     
     
@@ -39,22 +50,91 @@ public class SetArchiveStatusCmd implements CliCommand
             printHelp();
             return;
         }
-        
-        // Collection name
-        String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
-        
-        // Status
-        String status = cmdLine.getOptionValue("status");
-        if(status == null) 
+
+        // Read and validate parameters
+        this.collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
+        if(!getStatus(cmdLine)) return;
+        if(getIds(cmdLine)) return;
+
+        // Update status
+        SolrClient client = SolrUtils.createSolrClient(cmdLine);        
+        updateStatus(client);
+    }
+
+    
+    private boolean getStatus(CommandLine cmdLine)
+    {
+        String tmp = cmdLine.getOptionValue("status");
+        if(tmp == null) 
         {
             System.out.println("ERROR: Missing required parameter '-status'");
             System.out.println();
             printHelp();
-            return;
+            return false;
         }
 
+        this.status = tmp.toUpperCase();
+        if(!STATUS_NAME.contains(status))
+        {
+            System.out.println("ERROR: Invalid '-status' parameter value: '" + tmp + "'");
+            System.out.println();
+            printHelp();
+            return false;
+        }
+        
+        return true;
     }
 
+    
+    private boolean getIds(CommandLine cmdLine)
+    {
+        this.lidvid = cmdLine.getOptionValue("lidvid");
+        this.packageId = cmdLine.getOptionValue("packageId");
+
+        if(lidvid == null && packageId == null)
+        {
+            System.out.println("ERROR: Either '-lidvid' or '-packageId' parameter is required");
+            System.out.println();
+            printHelp();
+            return false;
+        }
+
+        if(lidvid != null && packageId != null)
+        {
+            System.out.println("ERROR: Could not have both '-lidvid' and '-packageId' parameters");
+            System.out.println();
+            printHelp();
+            return false;
+        }
+
+        return true;
+    }
+    
+
+    private void updateStatus(SolrClient client)
+    {
+        if(lidvid != null)
+        {
+            updateStatusByLidvid(client);
+        }
+        else if(packageId != null)
+        {
+            updateStatusByPackageId(client);
+        }
+    }
+    
+    
+    private void updateStatusByLidvid(SolrClient client)
+    {
+        
+    }
+    
+
+    private void updateStatusByPackageId(SolrClient client)
+    {
+        
+    }
+    
     
     public void printHelp()
     {

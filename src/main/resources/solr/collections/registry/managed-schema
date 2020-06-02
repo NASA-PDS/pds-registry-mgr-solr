@@ -8,8 +8,9 @@
     <field name="lidvid" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <uniqueKey>lidvid</uniqueKey>
 
-    <!-- Package / transaction ID -->
+    <!-- Package ID, Archive status -->
     <field name="_package_id" type="string" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="archive_status" type="string" indexed="true" stored="true" required="true" multiValued="false" default="STAGED" />
 
     <!-- Metadata -->
     <field name="title" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
