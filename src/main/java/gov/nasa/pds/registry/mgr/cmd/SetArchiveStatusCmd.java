@@ -1,18 +1,25 @@
 package gov.nasa.pds.registry.mgr.cmd;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrInputDocument;
 
 import gov.nasa.pds.registry.mgr.Constants;
+import gov.nasa.pds.registry.mgr.util.CloseUtils;
 import gov.nasa.pds.registry.mgr.util.SolrUtils;
 
 public class SetArchiveStatusCmd implements CliCommand
 {
-    private static final String DEFAULT_STATUS_NAME = "STAGED";
-    private Set<String> STATUS_NAME; 
+    private Set<String> statusNames; 
 
     private String collectionName;
     private String status;
@@ -22,23 +29,23 @@ public class SetArchiveStatusCmd implements CliCommand
     
     public SetArchiveStatusCmd()
     {
-        STATUS_NAME = new TreeSet<>();
+        statusNames = new TreeSet<>();
 
-        STATUS_NAME.add("ARCHIVED");
-        STATUS_NAME.add("ARCHIVED_ACCUMULATING");
-        STATUS_NAME.add("IN_LIEN_RESOLUTION");
-        STATUS_NAME.add("IN_LIEN_RESOLUTION_ACCUMULATING");
-        STATUS_NAME.add("IN_PEER_REVIEW");
-        STATUS_NAME.add("IN_PEER_REVIEW_ACCUMULATING");
-        STATUS_NAME.add("IN_QUEUE");
-        STATUS_NAME.add("IN_QUEUE_ACCUMULATING");
-        STATUS_NAME.add("LOCALLY_ARCHIVED");
-        STATUS_NAME.add("LOCALLY_ARCHIVED_ACCUMULATING");
-        STATUS_NAME.add("PRE_PEER_REVIEW");
-        STATUS_NAME.add("PRE_PEER_REVIEW_ACCUMULATING");
-        STATUS_NAME.add("SAFED");
-        STATUS_NAME.add("STAGED");
-        STATUS_NAME.add("SUPERSEDED");
+        statusNames.add("ARCHIVED");
+        statusNames.add("ARCHIVED_ACCUMULATING");
+        statusNames.add("IN_LIEN_RESOLUTION");
+        statusNames.add("IN_LIEN_RESOLUTION_ACCUMULATING");
+        statusNames.add("IN_PEER_REVIEW");
+        statusNames.add("IN_PEER_REVIEW_ACCUMULATING");
+        statusNames.add("IN_QUEUE");
+        statusNames.add("IN_QUEUE_ACCUMULATING");
+        statusNames.add("LOCALLY_ARCHIVED");
+        statusNames.add("LOCALLY_ARCHIVED_ACCUMULATING");
+        statusNames.add("PRE_PEER_REVIEW");
+        statusNames.add("PRE_PEER_REVIEW_ACCUMULATING");
+        statusNames.add("SAFED");
+        statusNames.add("STAGED");
+        statusNames.add("SUPERSEDED");
     }
     
     
@@ -54,10 +61,11 @@ public class SetArchiveStatusCmd implements CliCommand
         // Read and validate parameters
         this.collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
         if(!getStatus(cmdLine)) return;
-        if(getIds(cmdLine)) return;
+        if(!getIds(cmdLine)) return;
 
         // Update status
-        SolrClient client = SolrUtils.createSolrClient(cmdLine);        
+        SolrClient client = SolrUtils.createSolrClient(cmdLine);
+        System.out.println("[INFO] Solr collection: " + collectionName);
         updateStatus(client);
     }
 
@@ -67,16 +75,16 @@ public class SetArchiveStatusCmd implements CliCommand
         String tmp = cmdLine.getOptionValue("status");
         if(tmp == null) 
         {
-            System.out.println("ERROR: Missing required parameter '-status'");
+            System.out.println("[ERROR] Missing required parameter '-status'");
             System.out.println();
             printHelp();
             return false;
         }
 
         this.status = tmp.toUpperCase();
-        if(!STATUS_NAME.contains(status))
+        if(!statusNames.contains(status))
         {
-            System.out.println("ERROR: Invalid '-status' parameter value: '" + tmp + "'");
+            System.out.println("[ERROR] Invalid '-status' parameter value: '" + tmp + "'");
             System.out.println();
             printHelp();
             return false;
@@ -93,7 +101,7 @@ public class SetArchiveStatusCmd implements CliCommand
 
         if(lidvid == null && packageId == null)
         {
-            System.out.println("ERROR: Either '-lidvid' or '-packageId' parameter is required");
+            System.out.println("[ERROR] Either '-lidvid' or '-packageId' parameter is required");
             System.out.println();
             printHelp();
             return false;
@@ -101,7 +109,7 @@ public class SetArchiveStatusCmd implements CliCommand
 
         if(lidvid != null && packageId != null)
         {
-            System.out.println("ERROR: Could not have both '-lidvid' and '-packageId' parameters");
+            System.out.println("[ERROR] Could not have both '-lidvid' and '-packageId' parameters");
             System.out.println();
             printHelp();
             return false;
@@ -111,22 +119,57 @@ public class SetArchiveStatusCmd implements CliCommand
     }
     
 
-    private void updateStatus(SolrClient client)
+    private void updateStatus(SolrClient client) throws Exception
     {
-        if(lidvid != null)
+        try
         {
-            updateStatusByLidvid(client);
+            if(lidvid != null)
+            {
+                updateStatusByLidvid(client);
+            }
+            else if(packageId != null)
+            {
+                updateStatusByPackageId(client);
+            }
         }
-        else if(packageId != null)
+        finally
         {
-            updateStatusByPackageId(client);
+            CloseUtils.close(client);
         }
     }
     
     
-    private void updateStatusByLidvid(SolrClient client)
+    private void updateStatusByLidvid(SolrClient client) throws Exception
     {
+        System.out.println("[INFO] Updating arhive status. Lidvid = " + lidvid + ", status = " + status);
         
+        // Check that the lidvid exists        
+        SolrQuery solrQuery = new SolrQuery("lidvid:\"" + lidvid + "\"");
+        solrQuery.set("fl", "lidvid");
+
+        // Get Solr doc by lidvid
+        QueryResponse resp = client.query(collectionName, solrQuery);
+        long numDocs = resp.getResults().getNumFound();
+        if(numDocs == 0)
+        {
+            System.out.println("[ERROR] Could not find a document with lidvid = " + lidvid);
+            return;
+        }
+        
+        // Update document
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.addField("lidvid", lidvid);
+        
+        Map<String, String> map = new TreeMap<>();
+        map.put("set", status);
+        doc.addField("archive_status", map);
+
+        List<SolrInputDocument> docs = new ArrayList<>();
+        docs.add(doc);
+        
+        client.add(this.collectionName, docs);
+        client.commit(this.collectionName);
+        System.out.println("[INFO] Done");
     }
     
 
@@ -146,7 +189,7 @@ public class SetArchiveStatusCmd implements CliCommand
         System.out.println("Required parameters:");
         System.out.println("  -status <status>    One of the following values:");
 
-        for(String name: STATUS_NAME)
+        for(String name: statusNames)
         {
             System.out.println("      " + name);
         }
