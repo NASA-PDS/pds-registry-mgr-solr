@@ -15,7 +15,7 @@ import org.apache.tika.Tika;
 
 import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
-import gov.nasa.pds.registry.mgr.util.SolrUtils;
+import gov.nasa.pds.registry.mgr.util.solr.SolrUtils;
 
 
 public class LoadDataCmd implements CliCommand

@@ -10,22 +10,29 @@ import java.util.TreeSet;
 import org.apache.commons.cli.CommandLine;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
 import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
-import gov.nasa.pds.registry.mgr.util.SolrUtils;
+import gov.nasa.pds.registry.mgr.util.solr.SolrCursor;
+import gov.nasa.pds.registry.mgr.util.solr.SolrUtils;
+
 
 public class SetArchiveStatusCmd implements CliCommand
 {
+    private static final int BATCH_SIZE = 100;
+    
     private Set<String> statusNames; 
 
     private String mCollectionName;
     private String mStatus;
     private String mLidvid;
     private String mPackageId;
+    private int updateCount;
     
     
     public SetArchiveStatusCmd()
@@ -187,37 +194,50 @@ public class SetArchiveStatusCmd implements CliCommand
 
     private void updateStatusByPackageId(SolrClient client) throws Exception
     {
-        System.out.println("[INFO] Updating arhive status. PackageId = " + mPackageId + ", status = " + mStatus);
-        
-        Map<String, String> statusMap = createStatusMap(mStatus);
+        System.out.println("[INFO] Updating arhive status. PackageId: " + mPackageId + ", status: " + mStatus);
         
         SolrQuery solrQuery = new SolrQuery("_package_id:\"" + mPackageId + "\"");
         solrQuery.set("fl", "lidvid");
+        // Sort is required by Solr cursor
+        solrQuery.setSort(SortClause.asc("lidvid"));
+        solrQuery.setRows(BATCH_SIZE);
 
-        // Get Solr docs by packageId
-        QueryResponse resp = client.query(mCollectionName, solrQuery);
-        long numDocs = resp.getResults().getNumFound();
-        if(numDocs == 0)
+        SolrCursor cursor = new SolrCursor(client, mCollectionName, solrQuery);
+        while(cursor.next())
         {
-            System.out.println("[ERROR] There are no documents with packageId = " + mPackageId);
-            return;
+            update(cursor.getResults(), client);
         }
 
-        // Create update batch
+        if(updateCount == 0)
+        {
+            System.out.println("[ERROR] There are no documents with packageId = " + mPackageId);
+        }
+        else
+        {
+            System.out.println("[INFO] Documents updated: " + updateCount);    
+        }
+    }
+    
+    
+    private void update(SolrDocumentList ids, SolrClient client) throws Exception
+    {
+        if(ids.size() == 0) return;
+        
+        Map<String, String> statusMap = createStatusMap(mStatus);
         List<SolrInputDocument> batch = new ArrayList<>();
         
-        for(SolrDocument respDoc: resp.getResults())
+        for(SolrDocument respDoc: ids)
         {
             String lidvid = (String)respDoc.getFirstValue("lidvid");
             SolrInputDocument updateDoc = createUpdateDoc(lidvid, statusMap);
             batch.add(updateDoc);
         }
-
+        
         // Add and commit the batch
         client.add(mCollectionName, batch);
         client.commit(mCollectionName);
         
-        System.out.println("[INFO] Done");
+        updateCount += batch.size();
     }
     
     

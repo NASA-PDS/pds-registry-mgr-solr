@@ -9,7 +9,8 @@ import org.apache.solr.common.SolrDocument;
 import gov.nasa.pds.registry.mgr.Constants;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
 import gov.nasa.pds.registry.mgr.util.EmbeddedBlobExporter;
-import gov.nasa.pds.registry.mgr.util.SolrUtils;
+import gov.nasa.pds.registry.mgr.util.solr.SolrUtils;
+
 
 public class ExportFileCmd implements CliCommand
 {

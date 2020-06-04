@@ -13,8 +13,8 @@ import gov.nasa.pds.registry.mgr.schema.cfg.ConfigReader;
 import gov.nasa.pds.registry.mgr.schema.cfg.Configuration;
 import gov.nasa.pds.registry.mgr.schema.dd.DataDictionary;
 import gov.nasa.pds.registry.mgr.schema.dd.JsonDDParser;
-import gov.nasa.pds.registry.mgr.util.SolrUtils;
 import gov.nasa.pds.registry.mgr.util.log.RegistryLogManager;
+import gov.nasa.pds.registry.mgr.util.solr.SolrUtils;
 
 
 public class UpdateSolrSchemaCmd implements CliCommand

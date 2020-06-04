@@ -19,7 +19,8 @@ import gov.nasa.pds.registry.mgr.schema.dd.DDClass;
 import gov.nasa.pds.registry.mgr.schema.dd.DataDictionary;
 import gov.nasa.pds.registry.mgr.schema.dd.Pds2SolrDataTypeMap;
 import gov.nasa.pds.registry.mgr.util.CloseUtils;
-import gov.nasa.pds.registry.mgr.util.SolrUtils;
+import gov.nasa.pds.registry.mgr.util.solr.SolrUtils;
+
 
 /**
  * Updates Solr schema by calling Solr schema API  
