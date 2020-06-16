@@ -1,4 +1,4 @@
-package gov.nasa.pds.registry.mgr.util;
+package gov.nasa.pds.registry.mgr.schema;
 
 import java.io.Writer;
 

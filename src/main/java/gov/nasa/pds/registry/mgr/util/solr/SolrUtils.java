@@ -1,4 +1,4 @@
-package gov.nasa.pds.registry.mgr.util;
+package gov.nasa.pds.registry.mgr.util.solr;
 
 import java.util.List;
 import java.util.Map;
