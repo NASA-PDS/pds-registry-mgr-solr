@@ -222,6 +222,9 @@ public class RegistryManagerCli
         bld = Option.builder("shards").hasArg().argName("#");
         options.addOption(bld.build());
 
+        bld = Option.builder("shardsPerNode").hasArg().argName("#");
+        options.addOption(bld.build());
+
         bld = Option.builder("replicas").hasArg().argName("#");
         options.addOption(bld.build());
         
