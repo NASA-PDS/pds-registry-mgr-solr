@@ -146,7 +146,8 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println("                           Default value is $REGISTRY_MANAGER_HOME/solr/collections/registry");
         System.out.println("  -collection <name>       Solr collection name. Default value is 'registry'");
         System.out.println("  -shards <number>         Number of shards for registry collection. Default value is 1");
-        System.out.println("  -shardsPerNode <number>  Maximum number of shards per node. Default value is the same as number of shards");
+        System.out.println("  -shardsPerNode <number>  Maximum number of shards per node for registry collection.");
+        System.out.println("                           Default value is the same as number of shards");
         System.out.println("  -replicas <number>       Number of replicas for registry collection. Default value is 1");
         System.out.println();
     }
