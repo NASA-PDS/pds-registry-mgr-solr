@@ -14,6 +14,7 @@ import gov.nasa.pds.registry.mgr.cmd.CliCommand;
 import gov.nasa.pds.registry.mgr.cmd.CreateRegistryCmd;
 import gov.nasa.pds.registry.mgr.cmd.DeleteDataCmd;
 import gov.nasa.pds.registry.mgr.cmd.DeleteRegistryCmd;
+import gov.nasa.pds.registry.mgr.cmd.ExportDataCmd;
 import gov.nasa.pds.registry.mgr.cmd.ExportFileCmd;
 import gov.nasa.pds.registry.mgr.cmd.GenerateSolrSchemaCmd;
 import gov.nasa.pds.registry.mgr.cmd.LoadDataCmd;
@@ -50,6 +51,7 @@ public class RegistryManagerCli
         System.out.println("  delete-registry       Delete registry collection and all its data");
         System.out.println("  load-data             Load data into registry collection");
         System.out.println("  delete-data           Delete data from registry collection");
+        System.out.println("  export-data           Export data from registry collection");
         System.out.println("  export-file           Export a file from blob storage");
         System.out.println("  set-archive-status    Set product archive status");        
         
@@ -160,13 +162,18 @@ public class RegistryManagerCli
     private void initCommands()
     {
         commands = new HashMap<>();
-        commands.put("load-data", new LoadDataCmd());
-        commands.put("delete-data", new DeleteDataCmd());
-        commands.put("export-file", new ExportFileCmd());
+
+        // Registry collection create / delete / edit
         commands.put("create-registry", new CreateRegistryCmd());
         commands.put("delete-registry", new DeleteRegistryCmd());
         commands.put("generate-solr-schema", new GenerateSolrSchemaCmd());
         commands.put("update-solr-schema", new UpdateSolrSchemaCmd());
+
+        // Data load / delete / edit
+        commands.put("load-data", new LoadDataCmd());
+        commands.put("delete-data", new DeleteDataCmd());
+        commands.put("export-data", new ExportDataCmd());
+        commands.put("export-file", new ExportFileCmd());
         commands.put("set-archive-status", new SetArchiveStatusCmd());        
     }
     
@@ -186,7 +193,7 @@ public class RegistryManagerCli
         bld = Option.builder("solrUrl").hasArg().argName("url");
         options.addOption(bld.build());
 
-        bld = Option.builder("filePath").hasArg().argName("path");
+        bld = Option.builder("file").hasArg().argName("path");
         options.addOption(bld.build());
 
         bld = Option.builder("configDir").hasArg().argName("dir");

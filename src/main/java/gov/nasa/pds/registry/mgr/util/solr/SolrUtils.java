@@ -98,6 +98,7 @@ public class SolrUtils
     }
 
     
+    @SuppressWarnings("rawtypes")
     public static void multiUpdate(SolrClient client, String collectionName, 
             List<SchemaRequest.Update> updateRequests) throws Exception
     {
