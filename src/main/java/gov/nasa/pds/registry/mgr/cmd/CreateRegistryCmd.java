@@ -33,6 +33,7 @@ public class CreateRegistryCmd implements CliCommand
         
         String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
         int shards = parseShards(cmdLine.getOptionValue("shards", "1"));
+        int shardsPerNode = parseShards(cmdLine.getOptionValue("shardsPerNode", String.valueOf(shards)));
         int replicas = parseReplicas(cmdLine.getOptionValue("replicas", "1"));
         
         System.out.println("Creating registry collection");
@@ -41,6 +42,7 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println("Configuration directory: " + configDir.getAbsolutePath());
         System.out.println("Collection: " + collectionName);
         System.out.println("Shards: " + shards);
+        System.out.println("Shards per node: " + shardsPerNode);
         System.out.println("Replicas: " + replicas);
 
         ZkClientClusterStateProvider zk = null;
@@ -54,7 +56,8 @@ public class CreateRegistryCmd implements CliCommand
             System.out.println("Creating collection...");
             client = new CloudSolrClient.Builder(zk).build();
             CollectionAdminRequest.Create req = CollectionAdminRequest.Create
-                    .createCollection(collectionName, collectionName, 1, 1);
+                    .createCollection(collectionName, collectionName, shards, replicas);
+            req.setMaxShardsPerNode(shardsPerNode);
 
             @SuppressWarnings("unused")
             CollectionAdminResponse resp = req.process(client);
@@ -136,14 +139,16 @@ public class CreateRegistryCmd implements CliCommand
         System.out.println("Create registry collection");
         System.out.println();
         System.out.println("Optional parameters:");
-        System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
-        System.out.println("                      For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
-        System.out.println("                      Default value is localhost:9983");
-        System.out.println("  -configDir <dir>    Configuration directory with registry collection configuration files"); 
-        System.out.println("                      Default value is $REGISTRY_MANAGER_HOME/solr/collections/registry");
-        System.out.println("  -collection <name>  Solr collection name. Default value is 'registry'");
-        System.out.println("  -shards <number>    Number of shards for registry collection. Default value is 1");
-        System.out.println("  -replicas <number>  Number of replicas for registry collection. Default value is 1");
+        System.out.println("  -zkHost <host>           ZooKeeper connection string, <host:port>[,<host:port>][/path]");
+        System.out.println("                           For example, zk1:2181,zk2:2181,zk3:2181/solr"); 
+        System.out.println("                           Default value is localhost:9983");
+        System.out.println("  -configDir <dir>         Configuration directory with registry collection configuration files"); 
+        System.out.println("                           Default value is $REGISTRY_MANAGER_HOME/solr/collections/registry");
+        System.out.println("  -collection <name>       Solr collection name. Default value is 'registry'");
+        System.out.println("  -shards <number>         Number of shards for registry collection. Default value is 1");
+        System.out.println("  -shardsPerNode <number>  Maximum number of shards per node for registry collection.");
+        System.out.println("                           Default value is the same as number of shards");
+        System.out.println("  -replicas <number>       Number of replicas for registry collection. Default value is 1");
         System.out.println();
     }
 
