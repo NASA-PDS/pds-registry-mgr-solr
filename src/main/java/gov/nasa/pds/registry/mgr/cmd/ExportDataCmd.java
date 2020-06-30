@@ -106,6 +106,11 @@ public class ExportDataCmd implements CliCommand
             return "_package_id:\"" + id + "\"";
         }
 
+        if(cmdLine.hasOption("all"))
+        {
+            return "*:*";
+        }
+
         return null;
     }
     
@@ -120,7 +125,8 @@ public class ExportDataCmd implements CliCommand
         System.out.println("Required parameters:");
         System.out.println("  -file <path>        Output file path");        
         System.out.println("  -lidvid <id>        Export data by lidvid");
-        System.out.println("  -packageId <id>     Export data by package id"); 
+        System.out.println("  -packageId <id>     Export data by package id");
+        System.out.println("  -all                Export all data");
         System.out.println("Optional parameters:");
         System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
         System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
