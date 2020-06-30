@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/NASA-PDS/registry/tree/HEAD)
+
+[Full Changelog](https://github.com/NASA-PDS/registry/compare/3.3.0-SNAPSHOT...HEAD)
+
+**Improvements:**
+
+- Develop utility for updating registry / search records [\#8](https://github.com/NASA-PDS/registry/issues/8)
+
 ## [3.3.0-SNAPSHOT](https://github.com/NASA-PDS/registry/tree/3.3.0-SNAPSHOT) (2020-06-29)
 
 [Full Changelog](https://github.com/NASA-PDS/registry/compare/v3.2.2...3.3.0-SNAPSHOT)
