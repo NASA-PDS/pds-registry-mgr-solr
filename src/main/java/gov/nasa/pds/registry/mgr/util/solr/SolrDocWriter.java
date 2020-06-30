@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Date;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 
@@ -45,8 +49,43 @@ public class SolrDocWriter implements Closeable
     {
         writer.append("<doc>\n");
         
-        
+        for(String fieldName: doc.getFieldNames())
+        {
+            Collection<Object> values = doc.getFieldValues(fieldName);
+            if(values != null && values.size() > 0)
+            {
+                for(Object value: values)
+                {
+                    writeField(fieldName, value);
+                }
+            }
+        }
         
         writer.append("</doc>\n");
     }
+
+
+    private void writeField(String key, Object value) throws Exception
+    {
+        if(key == null || value == null || "_version_".equals(key)) return;
+        
+        writer.write("  <field name=\"");
+        writer.write(key);
+        writer.write("\">");
+        
+        String strValue;
+        if(value instanceof Date)
+        {
+            strValue = DateTimeFormatter.ISO_INSTANT.format(((Date)value).toInstant());
+        }
+        else
+        {
+            strValue = value.toString();
+        }
+        
+        writer.write(StringEscapeUtils.escapeXml(strValue));
+        
+        writer.write("</field>\n");
+    }
+    
 }

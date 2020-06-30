@@ -40,10 +40,10 @@ public class LoadDataCmd implements CliCommand
         String collectionName = cmdLine.getOptionValue("collection", Constants.DEFAULT_REGISTRY_COLLECTION);
 
         // Get list of files to load
-        String filePath = cmdLine.getOptionValue("filePath");
+        String filePath = cmdLine.getOptionValue("file");
         if(filePath == null) 
         {
-            System.out.println("ERROR: Missing required parameter '-filePath'");
+            System.out.println("ERROR: Missing required parameter '-file'");
             System.out.println();
             printHelp();
             return;
@@ -154,7 +154,7 @@ public class LoadDataCmd implements CliCommand
         System.out.println("Load data into registry collection");
         System.out.println();
         System.out.println("Required parameters:");
-        System.out.println("  -filePath <path>    An XML file or a directory to load."); 
+        System.out.println("  -file <path>        An XML file or a directory to load."); 
         System.out.println("Optional parameters:");
         System.out.println("  -solrUrl <url>      Solr URL. Default is http://localhost:8983/solr");
         System.out.println("  -zkHost <host>      ZooKeeper connection string, <host:port>[,<host:port>][/path]");
